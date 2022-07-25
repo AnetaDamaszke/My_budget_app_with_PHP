@@ -24,6 +24,16 @@
             $_SESSION['e_username'] = "Nazwa użytkownika może składać się tylko z liter!";
         }
 
+        //sprawdź poprawność adresu e-mail:
+        $email = $_POST['email'];
+        $emailB = filter_var($email, FILTER_SANITIZE_EMAIL);
+
+        if((filter_var($emailB, FILTER_VALIDATE_EMAIL)==false) || ($emailB!=$email))
+        {
+            $wszystko_OK = false;
+            $_SESSION['e_email'] = "Podaj poprawny adres e-mail!";
+        }
+
         if($wszystko_OK == true)
         {
             echo "Udana walidacja!"; exit();
