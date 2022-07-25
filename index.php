@@ -1,6 +1,7 @@
 <?php
     session_start();
 
+    
 ?>
 
 <!DOCTYPE html>
@@ -10,6 +11,7 @@
         <meta name="description" content="Project for course">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <title>My Budget App - rejestracja konta</title>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <link href="https://fonts.googleapis.com/css2?family=Concert+One&family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/custom.css">
@@ -67,6 +69,7 @@
                                         <input type="checkbox" name="rules"/> Akceptuję regulmin
                                     </label>   
                                 </div>
+                                <div class="g-recaptcha" data-sitekey="6Lf_Wx0hAAAAAM2LCmn8OaSkTJySryUvDoh0eHRP"></div>
                                 <div id="statement" class="registration-statement"></div>
                                 <div class="text-center">
                                     <button type="button" id="reigistrationButton" class="btn text-uppercase text-white form-button" onclick="validateForm()">Załóż konto</button>
@@ -99,6 +102,18 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
         <script src="js/registration.js"></script>
+        <script src="https://www.google.com/recaptcha/enterprise.js?render=6Lf_Wx0hAAAAAM2LCmn8OaSkTJySryUvDoh0eHRP"></script>
+        <script>
 
+            grecaptcha.enterprise.ready(function() 
+            {
+                grecaptcha.enterprise.execute('6Lf_Wx0hAAAAAM2LCmn8OaSkTJySryUvDoh0eHRP', {action: 'login'}).then(function(token) {
+                var elms = document.getElementsByClassName('recaptchaResponse');
+                for (var i = 0; i < elms.length; i++) {
+                    elms[i].setAttribute("value", token); 
+                });
+            });
+
+        </script>
     </body>
 </html>
