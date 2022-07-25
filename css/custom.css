@@ -612,3 +612,9 @@ input:checked ~ .checkmark {
     border-left: 0;
     padding: 3px;
 }
+
+.error {
+    color: red;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

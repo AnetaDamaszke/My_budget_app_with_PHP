@@ -1,7 +1,34 @@
 <?php
+
     session_start();
 
-    
+    if(isset($_POST['email']))
+    {
+        //udana walidacja:
+        $wszystko_OK = true;
+
+        //sprawdź poprawność nazwy użytkownika:
+        $username = $_POST['username'];
+
+        //sprawdzenie długości nazwy użytkownika:
+        if((strlen($username)<3) || (strlen($username)>50))
+        {
+            $wszystko_OK = false;
+            $_SESSION['e_username']="Nazwa użytkownika musi posiadać od 3 do 50 znaków!";
+        }
+
+        //sprawdzenie czy nazwa użytkownika składa się z dozwolonych znaków:
+        if(ctype_alnum($username)==false)
+        {
+            $wszystko_OK = false;
+            $_SESSION['e_username'] = "Nazwa użytkownika może składać się tylko z liter!";
+        }
+
+        if($wszystko_OK == true)
+        {
+            echo "Udana walidacja!"; exit();
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -48,19 +75,30 @@
                     <div class="col-lg-5">
                         <div class="registartion-box">
                             <h2 class="text-center text-uppercase registration-header">Nie masz konta? Zarejestruj się:</h2>
+                            
                             <form method="post">
                                 <div class="form-group">
                                     <label for="username" class="form-control-label">Imię i nazwisko</label>
-                                    <input type="text" id="username" placeholder="np. Jan Kowalski" class="form-control"/>
+                                    <input type="text" name="username" id="username" placeholder="np. Jan Kowalski" class="form-control"/>
+                                    
+                                    <?php
+
+                                    if(isset($_SESSION['e_username']))
+                                    {
+                                        echo '<div class="error">'.$_SESSION['e_username'].'</div>';
+                                        unset($_SESSION['e_username']);
+                                    }
+
+                                    ?>
                                 </div>
                                 <div class="form-group">
                                     <label for="email" class="form-control-label">E-mail</label>
-                                    <input type="email" id="email" placeholder="np. jan@kowalski.com" class="form-control"/>
+                                    <input type="email" name="email" id="email" placeholder="np. jan@kowalski.com" class="form-control"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="password1" class="form-control-label">Hasło</label>
                                     <div class="d-flex"> 
-                                        <input type="password" id="password1" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
+                                        <input type="password" name="password" id="password1" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
                                         <button id="showPassword" type="button" value="OFF" class="show-password__btn"><img src="img/eye.png" width="20px" alt=""></button>
                                     </div>
                                 </div>
@@ -72,10 +110,11 @@
                                 <div class="g-recaptcha" data-sitekey="6Lf_Wx0hAAAAAM2LCmn8OaSkTJySryUvDoh0eHRP"></div>
                                 <div id="statement" class="registration-statement"></div>
                                 <div class="text-center">
-                                    <button type="button" id="reigistrationButton" class="btn text-uppercase text-white form-button" onclick="validateForm()">Załóż konto</button>
+                                    <button type="submit" id="reigistrationButton" class="btn text-uppercase text-white form-button">Załóż konto</button>
                                 </div>
                                 
                             </form>
+
                         </div>
                     </div>
                     <div class="col-lg-7">
@@ -101,7 +140,6 @@
         </footer>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        <script src="js/registration.js"></script>
         <script src="https://www.google.com/recaptcha/enterprise.js?render=6Lf_Wx0hAAAAAM2LCmn8OaSkTJySryUvDoh0eHRP"></script>
         <script>
 
