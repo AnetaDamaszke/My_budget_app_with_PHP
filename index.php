@@ -5,7 +5,7 @@
     if(isset($_POST['email']))
     {
         //udana walidacja:
-        $wszystko_OK = true;
+        $is_OK = true;
 
         //sprawdź poprawność nazwy użytkownika:
         $username = $_POST['username'];
@@ -13,14 +13,14 @@
         //sprawdzenie długości nazwy użytkownika:
         if((strlen($username)<3) || (strlen($username)>50))
         {
-            $wszystko_OK = false;
+            $is_OK = false;
             $_SESSION['e_username']="Nazwa użytkownika musi posiadać od 3 do 50 znaków!";
         }
 
         //sprawdzenie czy nazwa użytkownika składa się z dozwolonych znaków:
         if(ctype_alnum($username)==false)
         {
-            $wszystko_OK = false;
+            $is_OK = false;
             $_SESSION['e_username'] = "Nazwa użytkownika może składać się tylko z liter!";
         }
 
@@ -30,11 +30,29 @@
 
         if((filter_var($emailB, FILTER_VALIDATE_EMAIL)==false) || ($emailB!=$email))
         {
-            $wszystko_OK = false;
+            $is_OK = false;
             $_SESSION['e_email'] = "Podaj poprawny adres e-mail!";
         }
 
-        if($wszystko_OK == true)
+        //sprawdź poprawnośc hasła:
+        $password1 = $_POST['password1'];
+        $password2 = $_POST['password2'];
+
+        if((strlen($password1)<8) || (strlen($password1)>20))
+        {
+            $is_OK = false;
+            $_SESSION['e_password'] = "Hasło musi posiadać od 8 do 20 znaków!";
+        }
+
+        if($password1 != $password2)
+        {
+            $is_OK = false;
+            $_SESSION['e_password'] = "Hasła musą być takie same!";
+        }
+
+        $password_hash = password_hash($password1, PASSWORD_DEFAULT);
+
+        if($is_OK == true)
         {
             echo "Udana walidacja!"; exit();
         }
@@ -104,13 +122,47 @@
                                 <div class="form-group">
                                     <label for="email" class="form-control-label">E-mail</label>
                                     <input type="email" name="email" id="email" placeholder="np. jan@kowalski.com" class="form-control"/>
+                                    <?php
+
+                                    if(isset($_SESSION['e_email']))
+                                    {
+                                        echo '<div class="error">'.$_SESSION['e_email'].'</div>';
+                                        unset($_SESSION['e_email']);
+                                    }
+
+                                    ?>
                                 </div>
                                 <div class="form-group">
                                     <label for="password1" class="form-control-label">Hasło</label>
                                     <div class="d-flex"> 
-                                        <input type="password" name="password" id="password1" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
+                                        <input type="password" name="password1" id="password1" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
                                         <button id="showPassword" type="button" value="OFF" class="show-password__btn"><img src="img/eye.png" width="20px" alt=""></button>
                                     </div>
+                                    <?php
+
+                                    if(isset($_SESSION['e_password']))
+                                    {
+                                        echo '<div class="error">'.$_SESSION['e_password'].'</div>';
+                                        unset($_SESSION['e_password']);
+                                    }
+
+                                    ?>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password1" class="form-control-label">Powtórz hasło</label>
+                                    <div class="d-flex"> 
+                                        <input type="password" name="password2" id="password2" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
+                                        <button id="showPassword" type="button" value="OFF" class="show-password__btn"><img src="img/eye.png" width="20px" alt=""></button>
+                                    </div>
+                                    <?php
+
+                                    if(isset($_SESSION['e_password']))
+                                    {
+                                        echo '<div class="error">'.$_SESSION['e_password'].'</div>';
+                                        unset($_SESSION['e_password']);
+                                    }
+
+                                    ?>
                                 </div>
                                 <div class="form-group">
                                     <label>
