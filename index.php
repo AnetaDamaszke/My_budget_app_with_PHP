@@ -1,10 +1,15 @@
+<?php
+    session_start();
+
+?>
+
 <!DOCTYPE html>
 <html lang="pl">
     <head>
         <meta charset="UTF-8">
         <meta name="description" content="Project for course">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <title>My Budget App</title>
+        <title>My Budget App - rejestracja konta</title>
         <link href="https://fonts.googleapis.com/css2?family=Concert+One&family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/custom.css">
@@ -41,10 +46,10 @@
                     <div class="col-lg-5">
                         <div class="registartion-box">
                             <h2 class="text-center text-uppercase registration-header">Nie masz konta? Zarejestruj się:</h2>
-                            <form action="">
+                            <form method="post">
                                 <div class="form-group">
-                                    <label for="name" class="form-control-label">Imię i nazwisko</label>
-                                    <input type="text" id="name" placeholder="np. Jan Kowalski" class="form-control"/>
+                                    <label for="username" class="form-control-label">Imię i nazwisko</label>
+                                    <input type="text" id="username" placeholder="np. Jan Kowalski" class="form-control"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="email" class="form-control-label">E-mail</label>
@@ -56,12 +61,17 @@
                                         <input type="password" id="password1" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
                                         <button id="showPassword" type="button" value="OFF" class="show-password__btn"><img src="img/eye.png" width="20px" alt=""></button>
                                     </div>
-                                   
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" name="rules"/> Akceptuję regulmin
+                                    </label>   
                                 </div>
                                 <div id="statement" class="registration-statement"></div>
                                 <div class="text-center">
                                     <button type="button" id="reigistrationButton" class="btn text-uppercase text-white form-button" onclick="validateForm()">Załóż konto</button>
                                 </div>
+                                
                             </form>
                         </div>
                     </div>
