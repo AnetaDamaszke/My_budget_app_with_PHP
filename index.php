@@ -72,10 +72,33 @@
             $_SESSION['e_bot'] = "Potwierdź, że nie jesteś robotem";
         }
 
+        //Zapamiętaj dane:
+        $_SESSION['fr_username']=$username;
+        $_SESSION['fr_email']=$email;
+        $_SESSION['fr_password1']=$password1;
+        $_SESSION['fr_password2']=$password2;
+        if(isset($_POST['rules'])) $_SESSION['fr_rules']=true;
 
-        if($is_OK == true)
+        require_once "connect.php";
+        mysqli_report(MYSQLI_REPORT_STRICT);
+
+        try 
         {
-            echo "Udana walidacja!"; exit();
+            $db_connect = new mysqli($host, $db_user, $db_password, $db_name);
+            if ($db_connect->connect_errno!=0)
+	        {
+		        throw new Exception(mysqli_connect_errno());
+	        }
+            else
+            {
+                
+            }
+        }
+
+        catch(Exception $e)
+        {
+            echo '<span class="error";>Błąd serwera! Przepraszamy za niedogdności!</span>';
+            echo '<br />Informacja deweloperska: '.$e;
         }
     }
 ?>
@@ -128,35 +151,54 @@
                             <form method="post">
                                 <div class="form-group">
                                     <label for="username" class="form-control-label">Imię i nazwisko</label>
-                                    <input type="text" name="username" id="username" placeholder="np. Jan Kowalski" class="form-control"/>
+                                    <input type="text" name="username" value="<?php
+                                        if(isset($_SESSION['fr_username']))
+                                        {
+                                            echo $_SESSION['fr_username'];
+                                            unset($_SESSION['fr_username']);
+                                        }
+                                    
+                                    ?>" id="username" placeholder="np. Jan Kowalski" class="form-control"/>
                                     
                                     <?php
-
                                     if(isset($_SESSION['e_username']))
                                     {
                                         echo '<div class="error">'.$_SESSION['e_username'].'</div>';
                                         unset($_SESSION['e_username']);
                                     }
-
                                     ?>
+
                                 </div>
                                 <div class="form-group">
                                     <label for="email" class="form-control-label">E-mail</label>
-                                    <input type="email" name="email" id="email" placeholder="np. jan@kowalski.com" class="form-control"/>
+                                    <input type="email" name="email" value="<?php
+                                    if(isset($_SESSION['fr_email']))
+                                    {
+                                        echo $_SESSION['fr_email'];
+                                        unset($_SESSION['fr_email']);
+                                    }
+                                    ?>" id="email" placeholder="np. jan@kowalski.com" class="form-control"/>
+                                    
                                     <?php
-
                                     if(isset($_SESSION['e_email']))
                                     {
                                         echo '<div class="error">'.$_SESSION['e_email'].'</div>';
                                         unset($_SESSION['e_email']);
                                     }
-
                                     ?>
+
                                 </div>
                                 <div class="form-group">
                                     <label for="password1" class="form-control-label">Hasło</label>
                                     <div class="d-flex"> 
-                                        <input type="password" name="password1" id="password1" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
+                                        <input type="password" name="password1" value="<?php
+                                        if(isset($_SESSION['fr_password1']))
+                                        {
+                                            echo $_SESSION['fr_password1'];
+                                            unset($_SESSION['fr_password1']);
+                                        }
+                                    
+                                        ?>" id="password1" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
                                         <button id="showPassword" type="button" value="OFF" class="show-password__btn"><img src="img/eye.png" width="20px" alt=""></button>
                                     </div>
                                     
@@ -173,7 +215,14 @@
                                 <div class="form-group">
                                     <label for="password1" class="form-control-label">Powtórz hasło</label>
                                     <div class="d-flex"> 
-                                        <input type="password" name="password2" id="password2" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
+                                        <input type="password" name="password2" value="<?php
+                                        if(isset($_SESSION['fr_password2']))
+                                        {
+                                            echo $_SESSION['fr_password2'];
+                                            unset($_SESSION['fr_password2']);
+                                        }
+                                    
+                                        ?>" id="password2" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
                                         <button id="showPassword" type="button" value="OFF" class="show-password__btn"><img src="img/eye.png" width="20px" alt=""></button>
                                     </div>
                                     
@@ -189,7 +238,14 @@
                                 </div>
                                 <div class="form-group">
                                     <label>
-                                        <input type="checkbox" name="rules" /> Akceptuję regulmin
+                                        <input type="checkbox" name="rules" <?php
+                                        if(isset($_SESSION['fr_regulamin']))
+                                        {
+                                            echo "checked";
+                                            unset($_SESSION['fr_regulamin']);
+                                        }
+
+                                        ?>/> Akceptuję regulmin
                                     </label> 
                                     
                                     <?php
