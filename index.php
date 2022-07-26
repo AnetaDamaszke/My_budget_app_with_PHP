@@ -103,7 +103,23 @@
                     $_SESSION['e_email'] = "Istnieje juz konto przypisane do tego adresu e-mail";
                 }
 
+                //czy nazwa uzytkownika jest już zarezerwowana?
+                $result = $db_connect->query("SELECT id FROM users WHERE user='$username'");
+
+                if(!$result) throw new Exception($db_connect->error);
+
+                $how_many_names = $result->num_rows;
+                if($how_many_names>0)
+                {
+                    $is_OK = false;
+                    $_SESSION['e_username'] = "Istnieje juz użytkownik o takiej nazwie. Wybierz inną!";
+                }
+
+               
+
+                $polaczenie->close();
                 
+            }
         }
 
         catch(Exception $e)
