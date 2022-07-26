@@ -60,7 +60,18 @@
             $_SESSION['e_rules'] = "Potwierdź akceptację regulaminu!";
         }
 
-        
+        //czy użytkownik jest botem?
+        $secret = "6Lf_Wx0hAAAAAIn6-WV5StrvcKdSmetmifZnCnbO";
+
+        $check = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']); 
+        $answer = json_decode($check);
+
+        if($answer->success == false)
+        {
+            $is_OK = false;
+            $_SESSION['e_bot'] = "Potwierdź, że nie jesteś robotem";
+        }
+
 
         if($is_OK == true)
         {
@@ -192,6 +203,14 @@
 
                                 </div>
                                 <div class="g-recaptcha" data-sitekey="6Lf_Wx0hAAAAAM2LCmn8OaSkTJySryUvDoh0eHRP"></div>
+                                <?php
+                                if(isset($_SESSION['e_bot']))
+                                {
+                                    echo '<div class="error">'.$_SESSION['e_bot'].'</div>';
+                                    unset($_SESSION['e_bot']);
+                                }
+
+                                ?>
                                 <div id="statement" class="registration-statement"></div>
                                 <div class="text-center">
                                     <button type="submit" id="reigistrationButton" class="btn text-uppercase text-white form-button">Załóż konto</button>
