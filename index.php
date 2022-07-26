@@ -41,16 +41,26 @@
         if((strlen($password1)<8) || (strlen($password1)>20))
         {
             $is_OK = false;
-            $_SESSION['e_password'] = "Hasło musi posiadać od 8 do 20 znaków!";
+            $_SESSION['e_password1'] = "Hasło musi posiadać od 8 do 20 znaków!";
         }
 
         if($password1 != $password2)
         {
             $is_OK = false;
-            $_SESSION['e_password'] = "Hasła musą być takie same!";
+            $_SESSION['e_password2'] = "Hasła musą być takie same!";
         }
 
         $password_hash = password_hash($password1, PASSWORD_DEFAULT);
+
+        //czy zaakceptowano rgulamin:
+
+        if(!isset($_POST['rules']))
+        {
+            $is_OK = false;
+            $_SESSION['e_rules'] = "Potwierdź akceptację regulaminu!";
+        }
+
+        
 
         if($is_OK == true)
         {
@@ -138,12 +148,13 @@
                                         <input type="password" name="password1" id="password1" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
                                         <button id="showPassword" type="button" value="OFF" class="show-password__btn"><img src="img/eye.png" width="20px" alt=""></button>
                                     </div>
+                                    
                                     <?php
 
-                                    if(isset($_SESSION['e_password']))
+                                    if(isset($_SESSION['e_password1']))
                                     {
-                                        echo '<div class="error">'.$_SESSION['e_password'].'</div>';
-                                        unset($_SESSION['e_password']);
+                                        echo '<div class="error">'.$_SESSION['e_password1'].'</div>';
+                                        unset($_SESSION['e_password1']);
                                     }
 
                                     ?>
@@ -154,20 +165,31 @@
                                         <input type="password" name="password2" id="password2" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
                                         <button id="showPassword" type="button" value="OFF" class="show-password__btn"><img src="img/eye.png" width="20px" alt=""></button>
                                     </div>
+                                    
                                     <?php
 
-                                    if(isset($_SESSION['e_password']))
+                                    if(isset($_SESSION['e_password2']))
                                     {
-                                        echo '<div class="error">'.$_SESSION['e_password'].'</div>';
-                                        unset($_SESSION['e_password']);
+                                        echo '<div class="error">'.$_SESSION['e_password2'].'</div>';
+                                        unset($_SESSION['e_password2']);
                                     }
 
                                     ?>
                                 </div>
                                 <div class="form-group">
                                     <label>
-                                        <input type="checkbox" name="rules"/> Akceptuję regulmin
-                                    </label>   
+                                        <input type="checkbox" name="rules" /> Akceptuję regulmin
+                                    </label> 
+                                    
+                                    <?php
+                                    if(isset($_SESSION['e_rules']))
+                                    {
+                                        echo '<div class="error">'.$_SESSION['e_rules'].'</div>';
+                                        unset($_SESSION['e_rules']);
+                                    }
+
+                                    ?>
+
                                 </div>
                                 <div class="g-recaptcha" data-sitekey="6Lf_Wx0hAAAAAM2LCmn8OaSkTJySryUvDoh0eHRP"></div>
                                 <div id="statement" class="registration-statement"></div>
