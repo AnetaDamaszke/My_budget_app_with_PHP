@@ -91,8 +91,19 @@
 	        }
             else
             {
+                //czy email już istnieje?
+                $result = $db_connect->query("SELECT id FROM users WHERE email='$email'");
+
+                if(!$result) throw new Exception($db_connect->error);
+
+                $how_many_emails = $result->num_rows;
+                if($how_many_emails>0)
+                {
+                    $is_OK = false;
+                    $_SESSION['e_email'] = "Istnieje juz konto przypisane do tego adresu e-mail";
+                }
+
                 
-            }
         }
 
         catch(Exception $e)
