@@ -104,7 +104,7 @@
                 }
 
                 //czy nazwa uzytkownika jest już zarezerwowana?
-                $result = $db_connect->query("SELECT id FROM users WHERE user='$username'");
+                $result = $db_connect->query("SELECT id FROM users WHERE username='$username'");
 
                 if(!$result) throw new Exception($db_connect->error);
 
@@ -114,10 +114,24 @@
                     $is_OK = false;
                     $_SESSION['e_username'] = "Istnieje juz użytkownik o takiej nazwie. Wybierz inną!";
                 }
+                
+                if($is_OK == true)
+                {
+                    //Dodawanie użytkownika do bazy
+                    if($db_connect->query("INSERT INTO users VALUES (NULL,'$username','$password_hash','$email')"))
+                    {
+                        $_SESSION['successful_registration']=true;
+                        echo "Udana rejetracja!"; exit();
 
-               
 
-                $polaczenie->close();
+                        //header('Location: login.php');
+                    }
+                    else{
+                        throw new Exception($db_connect->error);
+                    }
+                }
+
+                $db_connect->close();
                 
             }
         }
