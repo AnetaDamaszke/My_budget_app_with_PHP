@@ -123,7 +123,6 @@
                         $_SESSION['successful_registration']=true;
                         echo "Udana rejetracja!"; exit();
 
-
                         //header('Location: login.php');
                     }
                     else{
