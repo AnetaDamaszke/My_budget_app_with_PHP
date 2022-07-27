@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="pl">
     <head>
@@ -16,7 +14,7 @@
         <!-- Navbar -->
         <nav class="nav navbar navbar-light navbar-expand-md menu">
             <div class="container">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="#">
                     <img class="menu-logo" src="img/MYBUDGET.svg" alt="logo" />
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
@@ -24,37 +22,34 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navContent">
                     <div class="navbar-nav">
-                        <a href="index.html" class="nav-item nav-link menu-link">Home</a>
-                        <a href="about.html" class="nav-item nav-link ms-2 ms-lg-3 menu-link">O porgramie</a>
-                        <a href="login.html" class="nav-item nav-link ms-2 ms-lg-3 active menu-link">Zaloguj</a>
+                        <a href="#" class="nav-item nav-link menu-link">Witaj, Użytkowniku!</a>
                     </div>
                 </div>
             </div>
         </nav>
 
-        <!-- Login -->
-        <section class="login">
+        <!-- User menu -->
+        <section class="user-menu">
             <div class="container">
-                <div class="m-auto login-box">
-                    <h2 class="text-center text-uppercase registration-header">Logowanie:</h2>
-                    <form action="logged_on.php" method="post">
-                        <div class="form-group">
-                            <label for="email" class="form-control-label">E-mail</label>
-                            <input type="email" name="email" id="email" class="form-control"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="form-control-label">Hasło</label>
-                            <div class="d-flex"> 
-                                <input type="password" name="password" id="password" class="form-control"/>
-                            </div>
-                        </div>
-                        <div id="loginStatement" class="login-statement"></div>
-                        <div class="text-center">
-                            <button type="submit" class="btn text-uppercase text-white form-button">Zaloguj</button>
-                        </div>
-                    </form>
+                <div class="m-auto user-menu__box">
+                    <a href="income.html" class="btn d-block text-uppercase user-menu__button" type="button">
+                        Dodaj przychód
+                    </a>
+                    <a href="expense.html" class="btn d-block text-uppercase user-menu__button" type="button">
+                        Dodaj wydatek
+                    </a>
+                    <a href="balance.html" class="btn d-block text-uppercase user-menu__button" type="button">
+                        Zobacz bilans
+                    </a>
+                    <div class="py-2"></div>
+                    <a href="setting.html" class="btn d-block text-uppercase user-menu__button" type="button">
+                        Ustawienia konta
+                    </a>
+                    <a href="index.html" class="btn d-block text-uppercase user-menu__button" type="button">
+                        Wyloguj się
+                    </a>
                 </div>
-                <img class="img-fluid login-img" src="img/BUDGETTING.png" alt="budżet domowy" />
+                <img class="img-fluid user-menu__img" src="img/REBUILD_THE_ECONOMY.png" alt="budżet domowy" />
             </div>
         </section>
 
@@ -75,5 +70,6 @@
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script src="js/registration.js"></script>
     </body>
 </html>
