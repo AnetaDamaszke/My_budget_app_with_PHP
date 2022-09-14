@@ -5,10 +5,8 @@
 
     if(isset($_POST['email']))
     {
-        //udana walidacja:
         $is_OK = true;
 
-        //sprawdź poprawność nazwy użytkownika:
         $username = $_POST['username'];
 
         //sprawdzenie długości nazwy użytkownika:

@@ -38,20 +38,20 @@
         <section class="user-menu">
             <div class="container">
                 <div class="m-auto user-menu__box">
-                    <a href="income.html" class="btn d-block text-uppercase user-menu__button" type="button">
+                    <a href="income.php" class="btn d-block text-uppercase user-menu__button" type="button">
                         Dodaj przychód
                     </a>
-                    <a href="expense.html" class="btn d-block text-uppercase user-menu__button" type="button">
+                    <a href="expense.php" class="btn d-block text-uppercase user-menu__button" type="button">
                         Dodaj wydatek
                     </a>
-                    <a href="balance.html" class="btn d-block text-uppercase user-menu__button" type="button">
+                    <a href="balance.php" class="btn d-block text-uppercase user-menu__button" type="button">
                         Zobacz bilans
                     </a>
                     <div class="py-2"></div>
-                    <a href="setting.html" class="btn d-block text-uppercase user-menu__button" type="button">
+                    <a href="setting.php" class="btn d-block text-uppercase user-menu__button" type="button">
                         Ustawienia konta
                     </a>
-                    <a href="index.html" class="btn d-block text-uppercase user-menu__button" type="button">
+                    <a href="index.php" class="btn d-block text-uppercase user-menu__button" type="button">
                         Wyloguj się
                     </a>
                 </div>
