@@ -1,6 +1,7 @@
 <?php
 
     session_start();
+    
 
     if(isset($_POST['email']))
     {
@@ -79,24 +80,17 @@
         $_SESSION['fr_password2']=$password2;
         if(isset($_POST['rules'])) $_SESSION['fr_rules']=true;
 
-        require_once "connect.php";
-        mysqli_report(MYSQLI_REPORT_STRICT);
-
         try 
         {
-            $db_connect = new mysqli($host, $db_user, $db_password, $db_name);
-            if ($db_connect->connect_errno!=0)
-	        {
-		        throw new Exception(mysqli_connect_errno());
-	        }
-            else
-            {
+            require_once "database.php";
+
                 //czy email już istnieje?
-                $result = $db_connect->query("SELECT id FROM users WHERE email='$email'");
+                $result = $db->query("SELECT id FROM users WHERE email='$email'");
 
-                if(!$result) throw new Exception($db_connect->error);
+                if(!$result) throw new Exception($db->error);
 
-                $how_many_emails = $result->num_rows;
+                $how_many_emails = $result->rowCount();
+
                 if($how_many_emails>0)
                 {
                     $is_OK = false;
@@ -104,11 +98,11 @@
                 }
 
                 //czy nazwa uzytkownika jest już zarezerwowana?
-                $result = $db_connect->query("SELECT id FROM users WHERE username='$username'");
+                $result = $db->query("SELECT id FROM users WHERE username='$username'");
 
-                if(!$result) throw new Exception($db_connect->error);
+                if(!$result) throw new Exception($db->error);
 
-                $how_many_names = $result->num_rows;
+                $how_many_names = $result->rowCount();
                 if($how_many_names>0)
                 {
                     $is_OK = false;
@@ -117,22 +111,19 @@
                 
                 if($is_OK == true)
                 {
-                    //Dodawanie użytkownika do bazy
-                    if($db_connect->query("INSERT INTO users VALUES (NULL,'$username','$password_hash','$email')"))
-                    {
-                        $_SESSION['successful_registration']=true;
-                        echo "Udana rejetracja!"; exit();
+                    $query = $db->prepare('INSERT INTO users VALUES (NULL, :username, :password, :email)');
+                    $query -> bindValue(':email', $email, PDO::PARAM_STR);
+                    $query -> bindValue(':username', $username, PDO::PARAM_STR);
+                    $query -> bindValue(':password', $password_hash, PDO::PARAM_STR);
+                    $query -> execute();
 
-                        header('Location: login.php');
-                    }
-                    else{
-                        throw new Exception($db_connect->error);
-                    }
+                    $_SESSION['successful_registration']=true;
+                    header('Location: login.php'); 
+                } else {
+                    
                 }
-
-                $db_connect->close();
                 
-            }
+            
         }
 
         catch(Exception $e)
@@ -160,7 +151,7 @@
         <!-- Navbar -->
         <nav class="nav navbar navbar-light navbar-expand-md menu">
             <div class="container">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="index.php">
                     <img class="menu-logo" src="img/MYBUDGET.svg" alt="logo" />
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">

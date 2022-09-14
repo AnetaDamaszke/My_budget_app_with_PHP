@@ -1,4 +1,14 @@
+<?php
 
+    session_start();
+
+    if(isset($_SESSION['logged_on']) && $_SESSION['logged_on'] == true)
+    {
+        header('Location: menu.php');
+        exit();
+    }
+
+?>
 
 <!DOCTYPE html>
 <html lang="pl">
@@ -24,9 +34,9 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navContent">
                     <div class="navbar-nav">
-                        <a href="index.html" class="nav-item nav-link menu-link">Home</a>
-                        <a href="about.html" class="nav-item nav-link ms-2 ms-lg-3 menu-link">O porgramie</a>
-                        <a href="login.html" class="nav-item nav-link ms-2 ms-lg-3 active menu-link">Zaloguj</a>
+                        <a href="index.php" class="nav-item nav-link menu-link">Home</a>
+                        <a href="about.php" class="nav-item nav-link ms-2 ms-lg-3 menu-link">O porgramie</a>
+                        <a href="login.php" class="nav-item nav-link ms-2 ms-lg-3 active menu-link">Zaloguj</a>
                     </div>
                 </div>
             </div>

@@ -1,3 +1,9 @@
+<?php
+
+    session_start();
+
+?>
+
 <!DOCTYPE html>
 <html lang="pl">
     <head>
@@ -14,7 +20,7 @@
         <!-- Navbar -->
         <nav class="nav navbar navbar-light navbar-expand-md menu">
             <div class="container">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="index.php">
                     <img class="menu-logo" src="img/MYBUDGET.svg" alt="logo" />
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
@@ -22,7 +28,7 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navContent">
                     <div class="navbar-nav">
-                        <a href="#" class="nav-item nav-link menu-link">Witaj, Użytkowniku!</a>
+                        <a href="#" class="nav-item nav-link menu-link">Witaj, <?= $_SESSION['name']; ?>!</a>
                     </div>
                 </div>
             </div>

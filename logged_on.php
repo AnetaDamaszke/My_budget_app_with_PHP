@@ -1,23 +1,40 @@
 <?php
 
-if ((!isset($_POST['email'])) || (!isset($_POST['password'])))
-{
-    header('Location: index.php');
-    exit();
-}
+    session_start();
 
-require_once "database.php";
+    //if (!isset($_SESSION['logged_on'])) {
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+        if ((isset($_POST['email']))) {
+            
+            $email = filter_input(INPUT_POST, 'email');
+            $password = filter_input(INPUT_POST, 'password');
 
-echo $email."</br>";
-echo $password;
+            require_once 'database.php';
 
-if ((!isset($_POST['email'])) || (!isset($_POST['password'])))
-{
-    header('Location: index.php');
-    exit();
-}
+            $sql = "SELECT * FROM users WHERE email= :email LIMIT 1";
+            $query = $db->prepare($sql);
+            $query -> bindValue(':email', $email, PDO::PARAM_STR);
+            $query -> execute();
+
+            $user = $query->fetch();
+
+            if(password_verify($password, $user['password'])) {
+                $_SESSION['logged_on'] = true;
+                $_SESSION['name'] = $user['username'];
+                header('Location: menu.php');
+                exit();
+
+            } else {
+                $_SESSION['logged_on'] = false;
+                header('Location: login.php');
+                exit();
+            }
+            
+        } else {
+            header('Location: login.php');
+            exit();
+        }
+
+    //} 
 
 ?>
