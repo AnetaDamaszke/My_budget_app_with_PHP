@@ -60,9 +60,11 @@
                         </div>
                         <div id="loginStatement" class="login-statement"></div>
                         <div class="text-center">
-                            <button type="submit" class="btn text-uppercase text-white form-button">Zaloguj</button>
+                            <button type="submit" class="btn text-uppercase text-white form-button mb-3">Zaloguj</button>
                         </div>
                     </form>
+                    <?php 
+                        if(isset($_SESSION['error'])) echo $_SESSION['error']; ?>
                 </div>
                 <img class="img-fluid login-img" src="img/BUDGETTING.png" alt="budżet domowy" />
             </div>

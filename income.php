@@ -1,3 +1,22 @@
+<?php
+
+    session_start();
+
+    if(!isset($_SESSION['logged_on'])) {
+        header('Location: login.php');
+        exit();
+    }
+
+    require_once 'database.php';
+
+    $sql = "SELECT * FROM user_incomes_categories";
+    $query = $db->prepare($sql);
+    $query -> execute();
+
+    $user = $query->fetch();
+
+?>
+
 <!DOCTYPE html>
 <html lang="pl">
     <head>
@@ -38,29 +57,34 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="add-box mx-auto">
-                            <form action="">
+                            <form method="post">
                                 <div class="row mb-4">
                                     <div class="col-md-6">
                                         <div class="form-group w-100">
                                             <label for="incomeValue" class="form-control-label mb-2">Kwota w PLN</label>
-                                            <input id="incomeValue" type="number" step="0.01" placeholder="np. 500.00" class="form-control"/>
+                                            <input id="incomeValue" type="number" name="incomeValue" step="0.01" placeholder="np. 500.00" class="form-control"/>
                                         </div>
                                     </div> 
                                     <div class="col-md-6">
                                         <div class="form-group w-100">
                                             <label for="incomeDate" class="form-check-label d-block mb-2">Data</label>
-                                            <input id="incomeDate" type="date" value="" class="form-control"/>
+                                            <input id="incomeDate" type="date" name="incomeDate" class="form-control"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <form action="" id="categoryCheck" class="form-check pt-4">
+                                        <div id="categoryCheck" class="form-check">
                                             <label class="form-check-label d-block mb-2">Kategoria:</label>
                                             <label class="form-checkbox-input d-block mb-1">
                                                 <input type="radio" checked="checked" name="radio" />
                                                 <span class="checkmark"></span>
                                                 <span class="add-radio__text ms-2">Wynagrodzenie</span>
+                                            </label>
+                                            <label class="form-checkbox-input d-block mb-1">
+                                                <input type="radio" name="radio" />
+                                                <span class="checkmark"></span>
+                                                <span class="add-radio__text ms-2">Świadczenia socjalne</span>
                                             </label>
                                             <label class="form-checkbox-input d-block mb-1">
                                                 <input type="radio" name="radio" />

@@ -2,6 +2,10 @@
 
     session_start();
 
+    if(!isset($_SESSION['logged_on'])) {
+        header('Location: login.php');
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -51,7 +55,7 @@
                     <a href="setting.php" class="btn d-block text-uppercase user-menu__button" type="button">
                         Ustawienia konta
                     </a>
-                    <a href="index.php" class="btn d-block text-uppercase user-menu__button" type="button">
+                    <a href="logout.php" class="btn d-block text-uppercase user-menu__button" type="button">
                         Wyloguj się
                     </a>
                 </div>
