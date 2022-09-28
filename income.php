@@ -7,13 +7,28 @@
         exit();
     }
 
-    require_once 'database.php';
+    if(isset($_POST['incomeValue'])) {
+        
+        $userId = $_SESSION['userId'];
+        $value = $_POST['incomeValue'];
+        $date = $_POST['incomeDate'];
+        $comment = $_POST['comment'];
+        $category = $_POST['category'];
 
-    $sql = "SELECT * FROM user_incomes_categories";
-    $query = $db->prepare($sql);
-    $query -> execute();
+        require_once "database.php";
 
-    $user = $query->fetch();
+        $getIncomeId=$db->query("SELECT id FROM incomes_categories_default WHERE category_name='$category'");
+
+        $categoryId = $getIncomeId->fetchColumn();
+        
+        $query = $db->prepare('INSERT INTO user_incomes VALUES (NULL, :userid, :value, :date, :categoryid, :comment)');
+        $query -> bindValue(':userid', $userId, PDO::PARAM_INT);
+        $query -> bindValue(':value', $value, PDO::PARAM_STR);
+        $query -> bindValue(':date', $date, PDO::PARAM_STR);
+        $query -> bindValue(':categoryid', $categoryId, PDO::PARAM_INT);
+        $query -> bindValue(':comment', $comment, PDO::PARAM_STR);
+        $query -> execute();
+    }
 
 ?>
 
@@ -62,13 +77,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group w-100">
                                             <label for="incomeValue" class="form-control-label mb-2">Kwota w PLN</label>
-                                            <input id="incomeValue" type="number" name="incomeValue" step="0.01" placeholder="np. 500.00" class="form-control"/>
+                                            <input name="incomeValue" placeholder="np. 500.00" class="form-control"/>
                                         </div>
                                     </div> 
                                     <div class="col-md-6">
                                         <div class="form-group w-100">
                                             <label for="incomeDate" class="form-check-label d-block mb-2">Data</label>
-                                            <input id="incomeDate" type="date" name="incomeDate" class="form-control"/>
+                                            <input id="incomeDate" name="incomeDate" class="form-control"/>
                                         </div>
                                     </div>
                                 </div>
@@ -76,36 +91,17 @@
                                     <div class="col">
                                         <div id="categoryCheck" class="form-check">
                                             <label class="form-check-label d-block mb-2">Kategoria:</label>
-                                            <label class="form-checkbox-input d-block mb-1">
-                                                <input type="radio" checked="checked" name="radio" />
-                                                <span class="checkmark"></span>
-                                                <span class="add-radio__text ms-2">Wynagrodzenie</span>
-                                            </label>
-                                            <label class="form-checkbox-input d-block mb-1">
-                                                <input type="radio" name="radio" />
-                                                <span class="checkmark"></span>
-                                                <span class="add-radio__text ms-2">Świadczenia socjalne</span>
-                                            </label>
-                                            <label class="form-checkbox-input d-block mb-1">
-                                                <input type="radio" name="radio" />
-                                                <span class="checkmark"></span>
-                                                <span class="add-radio__text ms-2">Sprzedaż allegro</span>
-                                            </label>
-                                            <label class="form-checkbox-input d-block mb-1">
-                                                <input type="radio" name="radio" />
-                                                <span class="checkmark"></span>
-                                                <span class="add-radio__text ms-2">Odsetki bankowe</span>
-                                            </label>
-                                            <label class="form-checkbox-input d-block mb-1">
-                                                <input type="radio" name="radio" />
-                                                <span class="checkmark"></span>
-                                                <span class="add-radio__text ms-2">Inne</span>
-                                            </label>
-                                        </form>
+                                            <select name="category">
+                                                <option>Wynagrodzenie</option>
+                                                <option>Świadczenia</option>
+                                                <option>Sprzedaż</option>
+                                                <option>Premia</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="form-group pt-4">
-                                        <label for="incomeDate" class="form-control-label d-block mb-2">Komentarz (opcjonalnie)</label>
-                                        <textarea rows="3" cols ="30" class="d-block w-100 p-3"></textarea>
+                                        <label for="comment" class="form-control-label d-block mb-2">Komentarz (opcjonalnie)</label>
+                                        <input name="comment" class="form-control d-block w-100 p-3" />
                                     </div>
                                 </div>
                                 <div class="text-center statement"></div>
@@ -114,7 +110,7 @@
                                         <a href="menu.html" type="button" class="btn form-button__secondary">Anuluj</a>
                                     </div>
                                     <div class="col-md-6">
-                                        <button id="addIncomeBtn" type="button" class="btn form-button">Dodaj</button>
+                                        <button id="addIncomeBtn" type="submit" class="btn form-button">Dodaj</button>
                                     </div>
                                 </div>
                             </form>

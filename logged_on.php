@@ -13,6 +13,9 @@
         $email = filter_input(INPUT_POST, 'email');
         $password = filter_input(INPUT_POST, 'password');
 
+        $email = htmlentities($email, ENT_QUOTES, "UTF-8");
+        $password = htmlentities($password, ENT_QUOTES, "UTF-8");
+
         require_once 'database.php';
 
         $sql = "SELECT * FROM users WHERE email= :email LIMIT 1";
@@ -24,7 +27,9 @@
 
         if(password_verify($password, $user['password'])) {
             $_SESSION['logged_on'] = true;
+            $_SESSION['userId'] = $user['id'];
             $_SESSION['name'] = $user['username'];
+
             unset($_SESSION['error']);
 
             header('Location: menu.php');
