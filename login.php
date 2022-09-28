@@ -26,7 +26,7 @@
         <!-- Navbar -->
         <nav class="nav navbar navbar-light navbar-expand-md menu">
             <div class="container">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="index.php">
                     <img class="menu-logo" src="img/MYBUDGET.svg" alt="logo" />
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">

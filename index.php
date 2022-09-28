@@ -115,13 +115,23 @@
                     $query -> bindValue(':password', $password_hash, PDO::PARAM_STR);
                     $query -> execute();
 
+                    //kopiowanie domyślych kategorii do kategorii użytkownika:
+                    //$userId = $db->query("SELECT id FROM users WHERE username='$username'");
+
+                    $query2 = $db->prepare('INSERT INTO user_incomes_categories (user_id, category_name) 
+                    SELECT users.id, incomes_categories_default.category_name 
+                    FROM users, incomes_categories_default 
+                    WHERE users.username = :username');
+                    $query2 -> bindValue(':username', $username, PDO::PARAM_STR);
+                    $query2 -> execute();
+
                     $_SESSION['successful_registration']=true;
                     header('Location: login.php'); 
                 } else {
                     
                 }
                 
-            
+        
         }
 
         catch(Exception $e)
