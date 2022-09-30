@@ -7,18 +7,35 @@
         exit();
     }
 
+    require_once "database.php";
+
+    $userId = $_SESSION['userId'];
+
+    // ladowanie kategorii użytkownika:
+    $getCategoryName=$db->query("SELECT category_name 
+    FROM user_incomes_categories 
+    WHERE user_id='$userId'");
+    $categoryName = $getCategoryName->fetch();
+                                                
+
+    // dodawanie przychodu do bazy:
     if(isset($_POST['incomeValue'])) {
         
-        $userId = $_SESSION['userId'];
         $value = $_POST['incomeValue'];
         $date = $_POST['incomeDate'];
         $comment = $_POST['comment'];
         $category = $_POST['category'];
 
-        require_once "database.php";
+        // dodawanie nowej kategorii:
+        $newCategory = $_POST['addNewIncomeCat'];
+        $addNewIncomeCat = $db->prepare('INSERT INTO user_incomes_categories 
+        VALUES (NULL, :userid, :newCategoryName)');
+        $addNewIncomeCat -> bindValue(':userid', $userId, PDO::PARAM_INT);
+        $addNewIncomeCat -> bindValue(':newCategoryName', $newCategory, PDO::PARAM_STR);
+        $addNewIncomeCat -> execute();
 
-        $getIncomeId=$db->query("SELECT id FROM incomes_categories_default WHERE category_name='$category'");
-
+        // pobierania ID kategorii przychodu:
+        $getIncomeId=$db->query("SELECT id FROM user_incomes_categories WHERE category_name='$category'");
         $categoryId = $getIncomeId->fetchColumn();
         
         $query = $db->prepare('INSERT INTO user_incomes VALUES (NULL, :userid, :value, :date, :categoryid, :comment)');
@@ -88,17 +105,31 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col">
-                                        <div id="categoryCheck" class="form-check">
-                                            <label class="form-check-label d-block mb-2">Kategoria:</label>
-                                            <select name="category">
-                                                <option>Wynagrodzenie</option>
-                                                <option>Świadczenia</option>
-                                                <option>Sprzedaż</option>
-                                                <option>Premia</option>
-                                            </select>
+                                    <div class="col-md-8 d-flex">
+                                        <div class="d-flex">
+                                            <div id="categoryCheck" class="form-check">
+                                                <label class="form-check-label d-block mb-2">Kategoria:</label>
+                                                <select name="category" class="me-3">
+                                                    <?php                                                
+                                                        foreach ($categoryName as $category) {
+                                                           echo "<option>{$category}</option>";
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
                                         </div>
+                                        
                                     </div>
+                                    <div class="col-md-6">
+                                            <div id="categoryCheck" class="form-check">
+                                                <label class="form-check-label d-block mb-2"></label>
+                                                <div class="form-group pt-4">
+                                                    <label for="addNewIncomeCat" class="form-control-label d-block mb-2">Nazwa nowej kategorii:</label>
+                                                    <input name="addNewIncomeCat" class="form-control d-block w-100 p-3" />
+                                                    <button type="submit" class="btn form-sm-button">Dodaj</button>
+                                                </div> 
+                                            </div>
+                                        </div>
                                     <div class="form-group pt-4">
                                         <label for="comment" class="form-control-label d-block mb-2">Komentarz (opcjonalnie)</label>
                                         <input name="comment" class="form-control d-block w-100 p-3" />
