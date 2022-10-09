@@ -216,7 +216,7 @@ body {
 }
 
 .form-sm-button {
-    margin-top: 1.4rem;
+    margin-top: 1.9rem;
     padding: .45rem 1.2rem;
     width: 100%;
     background-color: #000D6B;
@@ -636,4 +636,8 @@ input:checked ~ .checkmark {
     color: red;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.modal-dialog {
+    top: 100px;
 }
