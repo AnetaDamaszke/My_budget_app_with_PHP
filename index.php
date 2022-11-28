@@ -115,12 +115,18 @@
                 $query -> bindValue(':password', $password_hash, PDO::PARAM_STR);
                 $query -> execute();
 
-                //kopiowanie domyślych kategorii do kategorii użytkownika:
-                //$userId = $db->query("SELECT id FROM users WHERE username='$username'");
-
+                //kopiowanie domyślych kategorii przychodów do kategorii użytkownika:
                 $query2 = $db->prepare('INSERT INTO incomes_category_assigned_to_users (user_id, category_name) 
                 SELECT users.id, incomes_category_default.name 
                 FROM users, incomes_category_default 
+                WHERE users.username = :username');
+                $query2 -> bindValue(':username', $username, PDO::PARAM_STR);
+                $query2 -> execute();
+
+                //kopiowanie domyślych kategorii wydatków do kategorii użytkownika:
+                $query2 = $db->prepare('INSERT INTO expenses_category_assigned_to_users (user_id, category_name) 
+                SELECT users.id, expenses_category_default.name 
+                FROM users, expenses_category_default 
                 WHERE users.username = :username');
                 $query2 -> bindValue(':username', $username, PDO::PARAM_STR);
                 $query2 -> execute();
