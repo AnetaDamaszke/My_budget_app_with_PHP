@@ -124,12 +124,20 @@
                 $query2 -> execute();
 
                 //kopiowanie domyślych kategorii wydatków do kategorii użytkownika:
-                $query2 = $db->prepare('INSERT INTO expenses_category_assigned_to_users (user_id, category_name) 
+                $query3 = $db->prepare('INSERT INTO expenses_category_assigned_to_users (user_id, category_name) 
                 SELECT users.id, expenses_category_default.name 
                 FROM users, expenses_category_default 
                 WHERE users.username = :username');
-                $query2 -> bindValue(':username', $username, PDO::PARAM_STR);
-                $query2 -> execute();
+                $query3 -> bindValue(':username', $username, PDO::PARAM_STR);
+                $query3 -> execute();
+
+                //kopiowanie domyślych kategorii wydatków do kategorii użytkownika:
+                $query4 = $db->prepare('INSERT INTO payment_category_assigned_to_users (user_id, name) 
+                SELECT users.id, payment_category_default.name 
+                FROM users, payment_category_default 
+                WHERE users.username = :username');
+                $query4 -> bindValue(':username', $username, PDO::PARAM_STR);
+                $query4 -> execute();
 
                 $_SESSION['successful_registration']=true;
                 header('Location: login.php'); 
