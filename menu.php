@@ -52,7 +52,7 @@
                         Zobacz bilans
                     </a>
                     <div class="py-2"></div>
-                    <a href="setting.php" class="btn d-block text-uppercase user-menu__button" type="button">
+                    <a href="settings.php" class="btn d-block text-uppercase user-menu__button" type="button">
                         Ustawienia konta
                     </a>
                     <a href="logout.php" class="btn d-block text-uppercase user-menu__button" type="button">

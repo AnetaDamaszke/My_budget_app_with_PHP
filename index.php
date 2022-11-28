@@ -82,54 +82,54 @@
         {
             require_once "database.php";
 
-                //czy email już istnieje?
-                $result = $db->query("SELECT id FROM users WHERE email='$email'");
+            //czy email już istnieje?
+            $result = $db->query("SELECT id FROM users WHERE email='$email'");
 
-                if(!$result) throw new Exception($db->error);
+            if(!$result) throw new Exception($db->error);
 
-                $how_many_emails = $result->rowCount();
+            $how_many_emails = $result->rowCount();
 
-                if($how_many_emails>0)
-                {
-                    $is_OK = false;
-                    $_SESSION['e_email'] = "Istnieje juz konto przypisane do tego adresu e-mail";
-                }
+            if($how_many_emails>0)
+            {
+                $is_OK = false;
+                $_SESSION['e_email'] = "Istnieje juz konto przypisane do tego adresu e-mail";
+            }
 
-                //czy nazwa uzytkownika jest już zarezerwowana?
-                $result = $db->query("SELECT id FROM users WHERE username='$username'");
+            //czy nazwa uzytkownika jest już zarezerwowana?
+            $result = $db->query("SELECT id FROM users WHERE username='$username'");
 
-                if(!$result) throw new Exception($db->error);
+            if(!$result) throw new Exception($db->error);
 
-                $how_many_names = $result->rowCount();
-                if($how_many_names>0)
-                {
-                    $is_OK = false;
-                    $_SESSION['e_username'] = "Istnieje juz użytkownik o takiej nazwie. Wybierz inną!";
-                }
+            $how_many_names = $result->rowCount();
+            if($how_many_names>0)
+            {
+                $is_OK = false;
+                $_SESSION['e_username'] = "Istnieje juz użytkownik o takiej nazwie. Wybierz inną!";
+            }
+            
+            if($is_OK == true)
+            {
+                $query = $db->prepare('INSERT INTO users VALUES (NULL, :username, :password, :email)');
+                $query -> bindValue(':email', $email, PDO::PARAM_STR);
+                $query -> bindValue(':username', $username, PDO::PARAM_STR);
+                $query -> bindValue(':password', $password_hash, PDO::PARAM_STR);
+                $query -> execute();
+
+                //kopiowanie domyślych kategorii do kategorii użytkownika:
+                //$userId = $db->query("SELECT id FROM users WHERE username='$username'");
+
+                $query2 = $db->prepare('INSERT INTO incomes_category_assigned_to_users (user_id, category_name) 
+                SELECT users.id, incomes_category_default.name 
+                FROM users, incomes_category_default 
+                WHERE users.username = :username');
+                $query2 -> bindValue(':username', $username, PDO::PARAM_STR);
+                $query2 -> execute();
+
+                $_SESSION['successful_registration']=true;
+                header('Location: login.php'); 
+            } else {
                 
-                if($is_OK == true)
-                {
-                    $query = $db->prepare('INSERT INTO users VALUES (NULL, :username, :password, :email)');
-                    $query -> bindValue(':email', $email, PDO::PARAM_STR);
-                    $query -> bindValue(':username', $username, PDO::PARAM_STR);
-                    $query -> bindValue(':password', $password_hash, PDO::PARAM_STR);
-                    $query -> execute();
-
-                    //kopiowanie domyślych kategorii do kategorii użytkownika:
-                    //$userId = $db->query("SELECT id FROM users WHERE username='$username'");
-
-                    $query2 = $db->prepare('INSERT INTO user_incomes_categories (user_id, category_name) 
-                    SELECT users.id, incomes_categories_default.category_name 
-                    FROM users, incomes_categories_default 
-                    WHERE users.username = :username');
-                    $query2 -> bindValue(':username', $username, PDO::PARAM_STR);
-                    $query2 -> execute();
-
-                    $_SESSION['successful_registration']=true;
-                    header('Location: login.php'); 
-                } else {
-                    
-                }
+            }
                 
         
         }
@@ -189,7 +189,7 @@
                             
                             <form method="post">
                                 <div class="form-group">
-                                    <label for="username" class="form-control-label">Imię i nazwisko</label>
+                                    <label for="username" class="form-control-label">Imię</label>
                                     <input type="text" name="username" value="<?php
                                         if(isset($_SESSION['fr_username']))
                                         {
@@ -237,8 +237,7 @@
                                             unset($_SESSION['fr_password1']);
                                         }
                                     
-                                        ?>" id="password1" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
-                                        <button id="showPassword" type="button" value="OFF" class="show-password__btn"><img src="img/eye.png" width="20px" alt=""></button>
+                                        ?>" id="password1" class="form-control"/>                                       
                                     </div>
                                     
                                     <?php
@@ -261,8 +260,7 @@
                                             unset($_SESSION['fr_password2']);
                                         }
                                     
-                                        ?>" id="password2" class="form-control" style="border-radius: 3px 0 0 3px; border-right: 0;"/>
-                                        <button id="showPassword" type="button" value="OFF" class="show-password__btn"><img src="img/eye.png" width="20px" alt=""></button>
+                                        ?>" id="password2" class="form-control"/>    
                                     </div>
                                     
                                     <?php

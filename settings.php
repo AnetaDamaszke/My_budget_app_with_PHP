@@ -42,21 +42,21 @@
         <section class="user-menu">
             <div class="container">
                 <div class="m-auto user-menu__box">
-                    <a href="income.php" class="btn d-block text-uppercase user-menu__button" type="button">
-                        Dodaj przychód
+                    <a href="#" class="btn d-block text-uppercase user-menu__button" type="button">
+                        Kategorie przychodów
                     </a>
-                    <a href="expense.php" class="btn d-block text-uppercase user-menu__button" type="button">
-                        Dodaj wydatek
+                    <a href="#" class="btn d-block text-uppercase user-menu__button" type="button">
+                        Kategorie wydatków
                     </a>
-                    <a href="balance.php" class="btn d-block text-uppercase user-menu__button" type="button">
-                        Zobacz bilans
+                    <a href="#" class="btn d-block text-uppercase user-menu__button" type="button">
+                        Sposoby płatonści
                     </a>
                     <div class="py-2"></div>
-                    <a href="setting.php" class="btn d-block text-uppercase user-menu__button" type="button">
-                        Ustawienia konta
+                    <a href="#" class="btn d-block text-uppercase user-menu__button" type="button">
+                        Dane konta
                     </a>
-                    <a href="logout.php" class="btn d-block text-uppercase user-menu__button" type="button">
-                        Wyloguj się
+                    <a href="menu.php" class="btn d-block text-uppercase user-menu__button" type="button">
+                        Wróć do menu
                     </a>
                 </div>
                 <img class="img-fluid user-menu__img" src="img/REBUILD_THE_ECONOMY.png" alt="budżet domowy" />

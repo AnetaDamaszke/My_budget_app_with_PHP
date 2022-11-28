@@ -13,26 +13,26 @@
 
         // ładowanie kategorii użytkownika:
         $getCategoryName=$db->query("SELECT category_name 
-        FROM user_incomes_categories 
+        FROM incomes_category_assigned_to_users 
         WHERE user_id='$userId'");                                             
 
         // dodawanie przychodu do bazy:
         if(isset($_POST['incomeValue'])) {
             
+            $category = $_POST['category'];
             $value = $_POST['incomeValue'];
             $date = $_POST['incomeDate'];
             $comment = $_POST['comment'];
-            $category = $_POST['category'];
 
             // pobierania ID kategorii przychodu:
-            $getIncomeId=$db->query("SELECT id FROM user_incomes_categories WHERE category_name='$category'");
+            $getIncomeId=$db->query("SELECT id FROM incomes_category_assigned_to_users WHERE category_name='$category'");
             $categoryId = $getIncomeId->fetchColumn();
             
-            $query = $db->prepare('INSERT INTO user_incomes VALUES (NULL, :userid, :value, :date, :categoryid, :comment)');
+            $query = $db->prepare('INSERT INTO incomes VALUES (NULL, :userid, :categoryid, :value, :date, :comment)');
             $query -> bindValue(':userid', $userId, PDO::PARAM_INT);
+            $query -> bindValue(':categoryid', $categoryId, PDO::PARAM_INT);
             $query -> bindValue(':value', $value, PDO::PARAM_STR);
             $query -> bindValue(':date', $date, PDO::PARAM_STR);
-            $query -> bindValue(':categoryid', $categoryId, PDO::PARAM_INT);
             $query -> bindValue(':comment', $comment, PDO::PARAM_STR);
             $query -> execute();
 
@@ -43,16 +43,16 @@
             $_SESSION['comment'] = 'Błąd!';
         }
 
-        // dodawanie nowej kategorii:
+        /* dodawanie nowej kategorii:
         if(isset($_POST['addNewIncomeCat'])) {
 
             $newCategory = $_POST['addNewIncomeCat'];
-            $addNewIncomeCat = $db->prepare('INSERT INTO user_incomes_categories 
+            $addNewIncomeCat = $db->prepare('INSERT INTO incomes_category_assigned_to_users
             VALUES (NULL, :userid, :newCategoryName)');
             $addNewIncomeCat -> bindValue(':userid', $userId, PDO::PARAM_INT);
             $addNewIncomeCat -> bindValue(':newCategoryName', $newCategory, PDO::PARAM_STR);
             $addNewIncomeCat -> execute();
-        }
+        }*/
     }
 
 ?>
@@ -83,7 +83,7 @@
                     <div class="navbar-nav">
                         <a href="expense.php" class="nav-item nav-link menu-link">Dodaj wydatek</a>
                         <a href="balance.php" class="nav-item nav-link menu-link">Zobacz bilans</a>
-                        <a href="setting.php" class="nav-item nav-link ms-2 ms-lg-3 menu-link">Ustawienia</a>
+                        <a href="settings.php" class="nav-item nav-link ms-2 ms-lg-3 menu-link">Ustawienia</a>
                         <a href="logout.php" class="nav-item nav-link ms-2 ms-lg-3 menu-link">Wyloguj</a>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group w-100">
                                             <label for="incomeDate" class="form-check-label d-block mb-2">Data</label>
-                                            <input id="incomeDate" name="incomeDate" class="form-control"/>
+                                            <input id="incomeDate" name="incomeDate" type="date" class="form-control"/>
                                         </div>
                                     </div>
                                 </div>
@@ -128,36 +128,6 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <button type="button" class="btn form-sm-button" data-bs-toggle="modal" data-bs-target="#addCatModal">
-                                        Dodaj nową
-                                        </button>
-                                    </div>
-
-                                    <!-- Modal z dodawaniem nowej kategorii -->
-                                    <div class="modal fade" id="addCatModal" role="dialog" tabindex="-1" aria-labelledby="addCatModall" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="addCatModall">Dodaj nową kategorię przychodu</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="col-12">
-                                                    <div id="categoryCheck" class="form-check">
-                                                        <label class="form-check-label d-block mb-2"></label>
-                                                        <div class="form-group pt-4">
-                                                            <label for="addNewIncomeCat" class="form-control-label d-block mb-2">Nazwa nowej kategorii:</label>
-                                                            <input name="addNewIncomeCat" class="form-control d-block w-100 p-3" />                                
-                                                        </div> 
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                                                <button type="submit" class="btn btn-primary">Dodaj do bazy</button>
-                                            </div>
-                                            </div>
-                                        </div>
                                     </div>
                                     
                                     <div class="form-group pt-4">
@@ -165,7 +135,15 @@
                                         <input name="comment" class="form-control d-block w-100 p-3" />
                                     </div>
                                 </div>
-                                <div class="text-center statement"></div>
+                                <div class="text-center pt-3">
+                                    <?php 
+                                        if($is_ok == true)
+                                        {
+                                            echo '<div>'.$_SESSION['comment'].'</div>';
+                                            unset($_SESSION['comment']);
+                                        }
+                                    ?>
+                                </div>
                                 <div class="row pt-2 pb-2">
                                     <div class="col-md-6">
                                         <a href="menu.html" type="button" class="btn form-button__secondary">Anuluj</a>
@@ -174,13 +152,7 @@
                                         <button id="addIncomeBtn" type="submit" class="btn form-button">Dodaj</button>
                                     </div>
                                 </div>
-                                <?php 
-                                    if($is_ok == true)
-                                    {
-                                        echo '<div>'.$_SESSION['comment'].'</div>';
-                                        unset($_SESSION['comment']);
-                                    }
-                                ?>
+                                
                             </form>
                         </div>
                     </div>
