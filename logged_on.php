@@ -2,7 +2,7 @@
 
     session_start();
 
-    if (!isset($_SESSION['logged_on'])) {
+    //if (!isset($_SESSION['logged_on'])) {
 
         if ((!isset($_POST['email'])) || (!isset($_POST['password']))) {
             header('Location: login.php');
@@ -41,6 +41,6 @@
             header('Location: login.php');
             exit();
         }
-    } 
+    //} 
 
 ?>
