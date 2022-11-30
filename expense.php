@@ -39,10 +39,10 @@
             $paymentMethodId = $getPaymentMethodId->fetchColumn();
             
             //dodawanie wydatku do bazy:
-            $query = $db->prepare('INSERT INTO expenses VALUES (NULL, :userid, :categoryid, ::paymentmethodid, :value, :date, :comment)');
+            $query = $db->prepare('INSERT INTO expenses VALUES (NULL, :userid, :categoryid, :payment, :value, :date, :comment)');
             $query -> bindValue(':userid', $userId, PDO::PARAM_INT);
             $query -> bindValue(':categoryid', $categoryId, PDO::PARAM_INT);
-            $query -> bindValue(':paymentmethodid', $categoryId, PDO::PARAM_INT);
+            $query -> bindValue(':payment', $paymentMethodId, PDO::PARAM_INT);
             $query -> bindValue(':value', $value, PDO::PARAM_STR);
             $query -> bindValue(':date', $date, PDO::PARAM_STR);
             $query -> bindValue(':comment', $comment, PDO::PARAM_STR);
@@ -50,6 +50,7 @@
 
             $is_ok = true;
             $_SESSION['comment'] = 'Świetnie! Dodano nowy przychód do bazy!';
+
         } else {
             $is_ok = false;
             $_SESSION['comment'] = 'Błąd!';
@@ -85,7 +86,7 @@
                         <a href="income.php" class="nav-item nav-link menu-link">Dodaj przychód</a>
                         <a href="balance.php" class="nav-item nav-link menu-link">Zobacz bilans</a>
                         <a href="settings.php" class="nav-item nav-link ms-2 ms-lg-3 menu-link">Ustawienia</a>
-                        <a href="index.php" class="nav-item nav-link ms-2 ms-lg-3 menu-link">Wyloguj</a>
+                        <a href="logout.php" class="nav-item nav-link ms-2 ms-lg-3 menu-link">Wyloguj</a>
                     </div>
                 </div>
             </div>
@@ -98,18 +99,18 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="add-box mx-auto">
-                            <form action="">
+                            <form method="post">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group w-100">
                                             <label for="expenseValue" class="form-control-label mb-2">Kwota w PLN</label>
-                                            <input id="expenseValue" type="number" step="0.01" placeholder="np. 500.00" class="form-control"/>
+                                            <input name="expenseValue" placeholder="np. 500.00" class="form-control"/>
                                         </div>
                                     </div> 
                                     <div class="col-md-6">
                                         <div class="form-group w-100">
                                             <label for="expenseDate" class="form-check-label d-block mb-2">Data</label>
-                                            <input id="expenseDate" type="date" value="" class="form-control"/>
+                                            <input id="expenseDate" name="expenseDate" type="date" value="" class="form-control"/>
                                         </div>
                                     </div>
                                 </div>

@@ -28,6 +28,7 @@
             $getIncomeId=$db->query("SELECT id FROM incomes_category_assigned_to_users WHERE category_name='$category'");
             $categoryId = $getIncomeId->fetchColumn();
             
+            //dodawanie przychodu do bazy
             $query = $db->prepare('INSERT INTO incomes VALUES (NULL, :userid, :categoryid, :value, :date, :comment)');
             $query -> bindValue(':userid', $userId, PDO::PARAM_INT);
             $query -> bindValue(':categoryid', $categoryId, PDO::PARAM_INT);
@@ -129,7 +130,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
                                     <div class="form-group pt-4">
                                         <label for="comment" class="form-control-label d-block mb-2">Komentarz (opcjonalnie)</label>
                                         <input name="comment" class="form-control d-block w-100 p-3" />
