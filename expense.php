@@ -33,10 +33,16 @@
             // pobierania ID kategorii przychodu:
             $getExpenseId=$db->query("SELECT id FROM expenses_category_assigned_to_users WHERE category_name='$category'");
             $categoryId = $getExpenseId->fetchColumn();
+
+            // pobierania ID metody płatności:
+            $getPaymentMethodId=$db->query("SELECT id FROM payment_methods_assigned_to_users WHERE name='$payment'");
+            $paymentMethodId = $getPaymentMethodId->fetchColumn();
             
-            $query = $db->prepare('INSERT INTO expenses VALUES (NULL, :userid, :categoryid, :value, :date, :comment)');
+            //dodawanie wydatku do bazy:
+            $query = $db->prepare('INSERT INTO expenses VALUES (NULL, :userid, :categoryid, ::paymentmethodid, :value, :date, :comment)');
             $query -> bindValue(':userid', $userId, PDO::PARAM_INT);
             $query -> bindValue(':categoryid', $categoryId, PDO::PARAM_INT);
+            $query -> bindValue(':paymentmethodid', $categoryId, PDO::PARAM_INT);
             $query -> bindValue(':value', $value, PDO::PARAM_STR);
             $query -> bindValue(':date', $date, PDO::PARAM_STR);
             $query -> bindValue(':comment', $comment, PDO::PARAM_STR);
@@ -143,13 +149,21 @@
                                         <input name="comment" class="form-control d-block w-100 p-3" />
                                     </div>
                                 </div>
-                                <div class="statement text-center"></div>
+                                <div class="text-center pt-3">
+                                    <?php 
+                                        if($is_ok == true)
+                                        {
+                                            echo '<div>'.$_SESSION['comment'].'</div>';
+                                            unset($_SESSION['comment']);
+                                        }
+                                    ?>
+                                </div>
                                 <div class="row pt-2">
                                     <div class="col-md-6">
                                         <a href="menu.php" type="button" class="btn form-button__secondary">Anuluj</a>
                                     </div>
                                     <div class="col-md-6">
-                                        <button id="addExpenseBtn" type="button" class="btn form-button">Dodaj</button>
+                                        <button id="addExpenseBtn" type="submit" class="btn form-button">Dodaj</button>
                                     </div>
                                 </div>
                             </form>
