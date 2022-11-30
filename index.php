@@ -132,9 +132,9 @@
                 $query3 -> execute();
 
                 //kopiowanie domyślych kategorii wydatków do kategorii użytkownika:
-                $query4 = $db->prepare('INSERT INTO payment_category_assigned_to_users (user_id, name) 
-                SELECT users.id, payment_category_default.name 
-                FROM users, payment_category_default 
+                $query4 = $db->prepare('INSERT INTO payment_methods_assigned_to_users (user_id, name) 
+                SELECT users.id, payment_methods_default.name 
+                FROM users, payment_methods_default 
                 WHERE users.username = :username');
                 $query4 -> bindValue(':username', $username, PDO::PARAM_STR);
                 $query4 -> execute();

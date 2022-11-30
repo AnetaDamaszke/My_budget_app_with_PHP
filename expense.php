@@ -1,3 +1,57 @@
+<?php
+
+    session_start();
+
+    if(!isset($_SESSION['logged_on'])) {
+        header('Location: login.php');
+        exit();
+    } else {
+
+        require_once "database.php";
+
+        $userId = $_SESSION['userId'];
+
+        // ładowanie kategorii użytkownika:
+        $getCategoryName=$db->query("SELECT category_name 
+        FROM expenses_category_assigned_to_users 
+        WHERE user_id='$userId'");
+        
+        // ładowanie sposobów płatności użytkownika:
+        $getPaymentMethod=$db->query("SELECT name
+        FROM payment_methods_assigned_to_users 
+        WHERE user_id='$userId'");  
+
+        // dodawanie wydatku do bazy:
+        if(isset($_POST['expenseValue'])) {
+            
+            $category = $_POST['category'];
+            $payment = $_POST['payment'];
+            $value = $_POST['expenseValue'];
+            $date = $_POST['expenseDate'];
+            $comment = $_POST['comment'];
+
+            // pobierania ID kategorii przychodu:
+            $getExpenseId=$db->query("SELECT id FROM expenses_category_assigned_to_users WHERE category_name='$category'");
+            $categoryId = $getExpenseId->fetchColumn();
+            
+            $query = $db->prepare('INSERT INTO expenses VALUES (NULL, :userid, :categoryid, :value, :date, :comment)');
+            $query -> bindValue(':userid', $userId, PDO::PARAM_INT);
+            $query -> bindValue(':categoryid', $categoryId, PDO::PARAM_INT);
+            $query -> bindValue(':value', $value, PDO::PARAM_STR);
+            $query -> bindValue(':date', $date, PDO::PARAM_STR);
+            $query -> bindValue(':comment', $comment, PDO::PARAM_STR);
+            $query -> execute();
+
+            $is_ok = true;
+            $_SESSION['comment'] = 'Świetnie! Dodano nowy przychód do bazy!';
+        } else {
+            $is_ok = false;
+            $_SESSION['comment'] = 'Błąd!';
+        }
+    }
+
+?>
+
 <!DOCTYPE html>
 <html lang="pl">
     <head>
@@ -54,62 +108,45 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col">
-                                        <div class="form-check pt-4">
-                                            <label class="form-check-label d-block mb-2">Kategoria</label>
-                                            <select id="categorySelect">
-                                                <option value="0">Wybierz:</option>
-                                                <option value="1">Jedzenie</option>
-                                                <option value="2">Mieszkanie</option>
-                                                <option value="3">Transport</option>
-                                                <option value="4">Telekomunikacja</option>
-                                                <option value="5">Opieka zdrowotna</option>
-                                                <option value="6">Ubranie</option>
-                                                <option value="7">Higiena</option>
-                                                <option value="8">Dzieci</option>
-                                                <option value="9">Rozrywka</option>
-                                                <option value="10">Wycieczka</option>
-                                                <option value="11">Szkolenia</option>
-                                                <option value="12">Hobby</option>
-                                                <option value="13">Oszczędności</option>
-                                                <option value="14">Spłata kredytu</option>
-                                                <option value="15">Rata</option>
-                                                <option value="16">Darowizna</option>
-                                                <option value="17">Inne</option>
-                                              </select>
+                                    <div class="col-md-6">
+                                        <div class="form-group pt-3">
+                                            <label class="form-check-label d-block mb-2">Kategoria:</label>
+                                            <select name="category">
+                                                <option selected="selected">Wybierz:</option>
+                                                <?php 
+                                                    while ($name = $getCategoryName ->fetch())
+                                                    {
+                                                        echo '<option>'.$name['category_name'].'</option>';
+                                                    }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group pt-3">
+                                            <label class="form-check-label d-block mb-2">Sposób płatności:</label>
+                                            <select name="payment">
+                                                <option selected="selected">Wybierz:</option>
+                                                <?php 
+                                                    while ($name = $getPaymentMethod ->fetch())
+                                                    {
+                                                        echo '<option>'.$name['name'].'</option>';
+                                                    }
+                                                ?>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col">
-                                        <div class="form-check pt-4">
-                                            <label class="form-check-label d-block mb-2">Sposób płatności</label>
-                                            <label class="form-checkbox-input d-block mb-1">
-                                                <input type="radio" checked="checked" name="radio" />
-                                                <span class="checkmark"></span>
-                                                <span class="add-radio__text">Gotówka</span>
-                                            </label>
-                                            <label class="form-checkbox-input d-block mb-1">
-                                                <input type="radio" checked="checked" name="radio" />
-                                                <span class="checkmark"></span>
-                                                <span class="add-radio__text">Karta kredytowa</span>
-                                            </label>
-                                            <label class="form-checkbox-input d-block mb-1">
-                                                <input type="radio" checked="checked" name="radio" />
-                                                <span class="checkmark"></span>
-                                                <span class="add-radio__text">Karta debetowa</span>
-                                            </label>
-                                        </div>
-                                    </div>
                                     <div class="form-group pt-4">
-                                        <label for="incomeDate" class="form-control-label d-block mb-2">Komentarz (opcjonalnie)</label>
-                                        <textarea rows="3" cols ="30" class="d-block w-100"></textarea>
+                                        <label for="comment" class="form-control-label d-block mb-2">Komentarz (opcjonalnie)</label>
+                                        <input name="comment" class="form-control d-block w-100 p-3" />
                                     </div>
                                 </div>
                                 <div class="statement text-center"></div>
                                 <div class="row pt-2">
                                     <div class="col-md-6">
-                                        <a href="menu.html" type="button" class="btn form-button__secondary">Anuluj</a>
+                                        <a href="menu.php" type="button" class="btn form-button__secondary">Anuluj</a>
                                     </div>
                                     <div class="col-md-6">
                                         <button id="addExpenseBtn" type="button" class="btn form-button">Dodaj</button>
