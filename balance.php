@@ -10,8 +10,8 @@
         require_once "database.php";
 
         $userId = $_SESSION['userId'];
-        $date1 = STR_TO_DATE('2022-11-01','%Y-%m-%d');
-        $date2 = STR_TO_DATE('2022-11-31','%Y-%m-%d');
+        //$date1 = STR_TO_DATE('2022-11-01','%Y-%m-%d');
+        //$date2 = STR_TO_DATE('2022-11-31','%Y-%m-%d');
 
         // ładowanie kategorii przychodu użytkownika:
         $getIncomeCategoryName=$db->query("SELECT category_name 
@@ -24,8 +24,8 @@
          WHERE user_id='$userId'");
 
          //całkowita suma przychodu:
-         $totalIncomeSum=$db->query("SELECT SUM(amount) FROM incomes WHERE user_id='$userId' 
-         AND date_of_income BETWEEN $date1 AND $date2");
+         //$totalIncomeSum=$db->query("SELECT SUM(amount) FROM incomes WHERE user_id='$userId' 
+         //AND date_of_income BETWEEN $date1 AND $date2");
     }
 ?>
 
@@ -105,7 +105,7 @@
                                 <h3 class="text-uppercase balance-box__item-subheader">Całkowita suma przychodów:</h3>
                                 <div class="box balance-box__sum">
                                     <?php
-                                        echo '<span id="allIncomesSum" class="">'.$totalIncomeSum.' zł</span>';
+                                        //echo '<span id="allIncomesSum" class="">'.$totalIncomeSum.' zł</span>';
                                     ?>
                                 </div>
                             </div>
