@@ -103,7 +103,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group w-100">
                                             <label for="incomeValue" class="form-control-label mb-2">Kwota w PLN</label>
-                                            <input name="incomeValue" placeholder="np. 500.00" class="form-control"/>
+                                            <input name="incomeValue" required min="0" max="1000000000" placeholder="np. 500.00" class="form-control"/>
                                         </div>
                                     </div> 
                                     <div class="col-md-6">
