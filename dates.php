@@ -1,3 +1,19 @@
+<?php
+
+    session_start();
+
+    if(!isset($_SESSION['logged_on'])) {
+        header('Location: login.php');
+        exit();
+    } else {
+
+        require_once "database.php";
+
+        $userId = $_SESSION['userId'];
+    }
+?>
+
+
 <!DOCTYPE html>
 <html lang="pl">
     <head>
@@ -36,39 +52,41 @@
             <div class="container">
                 <h1 id="balanceHeader" class="text-center dates-header">Wybierz zakres dat bilansu:</h1>
                 <div class="m-auto user-menu__box">
-                    <label class="form-checkbox-input d-block mb-3">
-                        <input type="radio" checked="checked" name="radio" />
-                        <span class="checkmark ms-2"></span>
-                        <span class="font-weight-bold">Bieżący miesiąc</span>
-                    </label>
-                    <label class="form-checkbox-input d-block mb-3">
-                        <input type="radio" name="radio" />
-                        <span class="checkmark ms-2"></span>
-                        <span class="font-weight-bold">Poprzedni miesiąc</span>
-                    </label>
-                    <label class="form-checkbox-input d-block mb-3">
-                        <input type="radio" name="radio" />
-                        <span class="checkmark ms-2"></span>
-                        <span class="font-weight-bold">Bieżący rok</span>
-                    </label>
-                    <label class="form-checkbox-input d-block mb-5">
-                        <input type="radio" name="radio" />
-                        <span class="checkmark ms-2"></span>
-                        <span class="font-weight-bold">Niestandardowe:</span>
-                        <div class="d-block mt-4">
-                            <div class="form-group mx-2">
-                                <label for="firstDate" class="form-control-label mb-1">Data początkowa</label>
-                                <input type="date" id="firstDate"  class="form-control"/>
+                    <form method="post">
+                        <label class="form-checkbox-input d-block mb-3">
+                            <input type="radio" checked="checked" name="radio" />
+                            <span class="checkmark ms-2"></span>
+                            <span class="font-weight-bold">Bieżący miesiąc</span>
+                        </label>
+                        <label class="form-checkbox-input d-block mb-3">
+                            <input type="radio" name="radio" />
+                            <span class="checkmark ms-2"></span>
+                            <span class="font-weight-bold">Poprzedni miesiąc</span>
+                        </label>
+                        <label class="form-checkbox-input d-block mb-3">
+                            <input type="radio" name="radio" />
+                            <span class="checkmark ms-2"></span>
+                            <span class="font-weight-bold">Bieżący rok</span>
+                        </label>
+                        <label class="form-checkbox-input d-block mb-5">
+                            <input type="radio" name="radio" />
+                            <span class="checkmark ms-2"></span>
+                            <span class="font-weight-bold">Niestandardowe:</span>
+                            <div class="d-block mt-4">
+                                <div class="form-group mx-2">
+                                    <label for="firstDate" class="form-control-label mb-1">Data początkowa</label>
+                                    <input type="date" id="firstDate"  class="form-control"/>
+                                </div>
+                                <div class="form-group mx-2">
+                                    <label for="secondDate" class="form-control-label mb-1">Data końcowa</label>
+                                    <input type="date" id="secondDate" class="form-control"/>
+                                </div>
                             </div>
-                            <div class="form-group mx-2">
-                                <label for="secondDate" class="form-control-label mb-1">Data końcowa</label>
-                                <input type="date" id="secondDate" class="form-control"/>
-                            </div>
+                        </label>
+                        <div class="text-center">
+                            <a href="balance.php" class="btn balance-date__button">Pokaż bilans</a>
                         </div>
-                    </label>
-                    <div class="text-center">
-                        <a href="balance.php" class="btn balance-date__button">Pokaż bilans</a>
-                    </div>
+                    </form>
                 </div>
                 <img class="img-fluid dates-menu__img" src="img/ECONOMY_ANALYSIS.png" alt="budżet domowy" />
             </div>
