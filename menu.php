@@ -48,7 +48,7 @@
                     <a href="expense.php" class="btn d-block text-uppercase user-menu__button" type="button">
                         Dodaj wydatek
                     </a>
-                    <a href="balance.php" class="btn d-block text-uppercase user-menu__button" type="button">
+                    <a href="dates.php" class="btn d-block text-uppercase user-menu__button" type="button">
                         Zobacz bilans
                     </a>
                     <div class="py-2"></div>

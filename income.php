@@ -11,8 +11,8 @@
 
         $userId = $_SESSION['userId'];
 
-        // ładowanie kategorii użytkownika:
-        $getCategoryName=$db->query("SELECT category_name 
+        // ładowanie kategorii przychodu użytkownika:
+        $getIncomeCategoryName=$db->query("SELECT category_name 
         FROM incomes_category_assigned_to_users 
         WHERE user_id='$userId'");                                             
 
@@ -83,7 +83,7 @@
                 <div class="collapse navbar-collapse justify-content-end" id="navContent">
                     <div class="navbar-nav">
                         <a href="expense.php" class="nav-item nav-link menu-link">Dodaj wydatek</a>
-                        <a href="balance.php" class="nav-item nav-link menu-link">Zobacz bilans</a>
+                        <a href="dates.php" class="nav-item nav-link menu-link">Zobacz bilans</a>
                         <a href="settings.php" class="nav-item nav-link ms-2 ms-lg-3 menu-link">Ustawienia</a>
                         <a href="logout.php" class="nav-item nav-link ms-2 ms-lg-3 menu-link">Wyloguj</a>
                     </div>
@@ -121,7 +121,7 @@
                                                 <select name="category" class="me-3">
                                                     <option selected="selected">Wybierz:</option>
                                                     <?php 
-                                                        while ($name = $getCategoryName ->fetch())
+                                                        while ($name = $getIncomeCategoryName ->fetch())
                                                         {
                                                             echo '<option>'.$name['category_name'].'</option>';
                                                         }
@@ -145,14 +145,25 @@
                                     ?>
                                 </div>
                                 <div class="row pt-2 pb-2">
-                                    <div class="col-md-6">
-                                        <a href="menu.html" type="button" class="btn form-button__secondary">Anuluj</a>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <button id="addIncomeBtn" type="submit" class="btn form-button">Dodaj</button>
-                                    </div>
-                                </div>
-                                
+                                    <?php 
+                                        if($is_ok == true)
+                                        {
+                                            echo '<div class="col-md-6">
+                                                    <a href="menu.php" type="button" class="btn form-button__secondary">Wróć do menu</a>
+                                                  </div>
+                                                  <div class="col-md-6">
+                                                    <a href="income.php" type="submit" class="btn form-button">Dodaj nowy</a>
+                                                  </div>';
+                                        } else {
+                                            echo '<div class="col-md-6">
+                                                    <a href="menu.php" type="button" class="btn form-button__secondary">Anuluj</a>
+                                                  </div>
+                                                  <div class="col-md-6">
+                                                    <button id="addIncomeBtn" type="submit" class="btn form-button">Dodaj</button>
+                                                  </div>';
+                                        }
+                                    ?>
+                                </div> 
                             </form>
                         </div>
                     </div>

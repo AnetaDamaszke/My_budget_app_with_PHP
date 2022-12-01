@@ -2,6 +2,7 @@
 
     session_start();
     
+    $successfulRegistration = false;
 
     if(isset($_POST['email']))
     {
@@ -139,10 +140,13 @@
                 $query4 -> bindValue(':username', $username, PDO::PARAM_STR);
                 $query4 -> execute();
 
-                $_SESSION['successful_registration']=true;
-                header('Location: login.php'); 
+                $successfulRegistration = true;
+                $_SESSION['message'] = 'Konto utworzone!';
+
+                //header('Location: login.php'); 
             } else {
-                
+                $successfulRegistration = false;
+                $_SESSION['message'] = 'Błąd rejestracji! Spróbuj jeszcze raz.';
             }
                 
         
@@ -182,7 +186,7 @@
                 <div class="collapse navbar-collapse justify-content-end" id="navContent">
                     <div class="navbar-nav">
                         <a href="index.php" class="nav-item nav-link menu-link">Home</a>
-                        <a href="about.php" class="nav-item nav-link ms-2 ms-lg-3 menu-link">O porgramie</a>
+                        <a href="about.php" class="nav-item nav-link ms-2 ms-lg-3 menu-link">O programie</a>
                         <a href="login.php" class="nav-item nav-link ms-2 ms-lg-3 active menu-link">Zaloguj</a>
                     </div>
                 </div>
@@ -318,9 +322,24 @@
                                 }
 
                                 ?>
-                                <div id="statement" class="registration-statement"></div>
+                                <div class="text-center pt-4 registration-message">
+                                    <?php 
+                                        if($successfulRegistration)
+                                        {
+                                            echo '<div>'.$_SESSION['message'].'</div>';
+                                            unset($_SESSION['message']);
+                                        }
+                                    ?>
+                                </div>
                                 <div class="text-center">
-                                    <button type="submit" id="reigistrationButton" class="btn text-uppercase text-white form-button">Załóż konto</button>
+                                    <?php 
+                                        if($successfulRegistration)
+                                        {
+                                            echo '<a href="login.php" id="reigistrationButton" class="btn text-uppercase text-white form-button">Przejdź do logowania</a>';
+                                        } else {
+                                            echo '<button type="submit" id="reigistrationButton" class="btn text-uppercase text-white form-button">Załóż konto</button>';
+                                        }
+                                    ?>
                                 </div>
                                 
                             </form>

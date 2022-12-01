@@ -196,6 +196,12 @@ body {
     box-shadow: 0 0 0 0.15rem rgb(13 110 253 / 25%);
 }
 
+.registration-message {
+    font-size: 14px;
+    color: #000D6B;
+    font-weight: 700;
+}
+
 .form-button {
     margin-top: 1rem;
     padding: .6rem 1.5rem;
@@ -478,7 +484,7 @@ input:checked ~ .checkmark {
 
 @media only screen and (max-width: 576px) {
     .add-header {
-        font-size: 28px;
+        font-size: 24px;
         padding: 40px 0;
     }
 }
@@ -644,4 +650,58 @@ input:checked ~ .checkmark {
 
 .modal-backdrop {
     z-index: 0 !important;
+}
+
+/** Dates **/
+
+.dates-menu {
+    background-color: #A5A6F6;
+    padding-top: 30px;
+    height: calc(100vh - 108px);
+}
+
+.dates-header {
+    font-weight: 600;
+    font-size: 36px;
+    padding: 60px 0;
+}
+
+.dates-menu__img {
+    right: 350px;
+    bottom: 30px;
+    position: absolute;
+}
+
+@media only screen and (max-width: 767px) {
+    .dates-menu {
+        height: calc(100vh - 108px);
+    }
+
+    .dates-menu__img {
+        right: 100px;
+        bottom: 49px;
+        position: absolute;
+    }
+
+    .dates-header {
+        font-size: 24px;
+        padding: 10px 0;
+    }
+}
+
+@media only screen and (max-width: 1380px) {
+    .dates-menu {
+        height: 100vh;
+    }
+
+    .dates-menu__img {
+        right: 100px;
+        bottom: -78px;
+        position: absolute;
+    }
+
+    .dates-header {
+        font-size: 24px;
+        padding: 10px 0;
+    }
 }
