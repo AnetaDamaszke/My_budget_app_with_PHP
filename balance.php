@@ -14,6 +14,9 @@
         $date1 = $_SESSION['date1'];
         $date2 = $_SESSION['date2'];
 
+        echo $date1." ".$date2;
+        exit();
+
         // ładowanie kategorii przychodu użytkownika:
         $getIncomeCategoryName=$db->query("SELECT category_name 
         FROM incomes_category_assigned_to_users 

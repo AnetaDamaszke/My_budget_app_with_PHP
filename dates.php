@@ -40,17 +40,23 @@
             exit();
 
         } else if(isset($_POST['dates']) && ($_POST['dates'] == '3')) {
-            
-            $date1 = 'bieżący rok';
-            echo $date1;
 
-            echo $_SESSION['date1']." ".$_SESSION['date2'];
+            $_SESSION['date1'] = date('Y-01-01');
+            $_SESSION['date2'] = date('Y-m-d');
+
+            $_SESSION['balanceTitle'] = 'bieżący rok';
+
+            header('Location: balance.php');
             exit();
 
         } else if(isset($_POST['dates']) && ($_POST['dates'] == '4')) {
             
-            $date1 = 'niestandardowe';
-            echo $date1;
+            $_SESSION['date1'] = $_POST['date1'];
+            $_SESSION['date2'] = $_POST['date2'];
+
+            $_SESSION['balanceTitle'] = 'niestandardowe';
+            
+            header('Location: balance.php');
             exit();
 
         } else {
