@@ -10,6 +10,44 @@
         require_once "database.php";
 
         $userId = $_SESSION['userId'];
+
+        if(isset($_POST['dates']) && ($_POST['dates'] == '1')) {
+
+            $date1 = date('Y-m-01');
+
+            $d = date('t');
+            $date2 = date('Y-m-'.$d);
+
+            $_SESSION['balanceTitle'] = 'bieżący miesiąc';
+
+            echo $date1." ".$date2;
+
+            header('Location: balance.php');
+            exit();
+
+        } else if(isset($_POST['dates']) && ($_POST['dates'] == '2')) {
+            
+            $date1 = 'popredni miesiąc';
+            echo $date1;
+            exit();
+
+        } else if(isset($_POST['dates']) && ($_POST['dates'] == '3')) {
+            
+            $date1 = 'bieżący rok';
+            echo $date1;
+            exit();
+
+        } else if(isset($_POST['dates']) && ($_POST['dates'] == '4')) {
+            
+            $date1 = 'niestandardowe';
+            echo $date1;
+            exit();
+
+        } else {
+            $_SESSION['message'] = 'Zaznacz zakres dat!';
+        }
+
+
     }
 ?>
 
@@ -54,37 +92,37 @@
                 <div class="m-auto user-menu__box">
                     <form method="post">
                         <label class="form-checkbox-input d-block mb-3">
-                            <input type="radio" checked="checked" name="radio" />
+                            <input type="radio" checked="checked" name="dates" value="1" />
                             <span class="checkmark ms-2"></span>
                             <span class="font-weight-bold">Bieżący miesiąc</span>
                         </label>
                         <label class="form-checkbox-input d-block mb-3">
-                            <input type="radio" name="radio" />
+                            <input type="radio" name="dates" value="2" />
                             <span class="checkmark ms-2"></span>
                             <span class="font-weight-bold">Poprzedni miesiąc</span>
                         </label>
                         <label class="form-checkbox-input d-block mb-3">
-                            <input type="radio" name="radio" />
+                            <input type="radio" name="dates" value="3" />
                             <span class="checkmark ms-2"></span>
                             <span class="font-weight-bold">Bieżący rok</span>
                         </label>
                         <label class="form-checkbox-input d-block mb-5">
-                            <input type="radio" name="radio" />
+                            <input type="radio" name="dates" value="4" />
                             <span class="checkmark ms-2"></span>
                             <span class="font-weight-bold">Niestandardowe:</span>
                             <div class="d-block mt-4">
                                 <div class="form-group mx-2">
                                     <label for="firstDate" class="form-control-label mb-1">Data początkowa</label>
-                                    <input type="date" id="firstDate"  class="form-control"/>
+                                    <input name="date1" type="date" id="firstDate"  class="form-control"/>
                                 </div>
                                 <div class="form-group mx-2">
                                     <label for="secondDate" class="form-control-label mb-1">Data końcowa</label>
-                                    <input type="date" id="secondDate" class="form-control"/>
+                                    <input name="date2" type="date" id="secondDate" class="form-control"/>
                                 </div>
                             </div>
                         </label>
                         <div class="text-center">
-                            <a href="balance.php" class="btn balance-date__button">Pokaż bilans</a>
+                            <button type="submit" class="btn balance-date__button">Pokaż bilans</button>
                         </div>
                     </form>
                 </div>

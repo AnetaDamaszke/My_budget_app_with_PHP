@@ -10,8 +10,9 @@
         require_once "database.php";
 
         $userId = $_SESSION['userId'];
-        $date1 = '2022-11-01';
-        $date2 = '2022-11-31';
+        
+        $date1 = $_SESSION['date1'];
+        $date2 = $_SESSION['date2'];
 
         //$date1 = $db->query("SELECT date_of_income FROM incomes WHERE id='15'");
         //$date = $date1->fetchColumn();
@@ -28,7 +29,7 @@
          WHERE user_id='$userId'");
 
          //całkowita suma przychodu:
-         $totalIncomeSum=$db->query("SELECT SUM(amount) FROM incomes WHERE user_id='$userId' AND date_of_income BETWEEN $date1 AND $date1");
+         $totalIncomeSum=$db->query("SELECT SUM(amount) FROM incomes WHERE user_id='$userId' AND date_of_income BETWEEN $date1 AND $date2");
          $total = $totalIncomeSum->fetchColumn();
     }
 ?>
