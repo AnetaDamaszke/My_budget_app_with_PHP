@@ -14,10 +14,6 @@
         $date1 = $_SESSION['date1'];
         $date2 = $_SESSION['date2'];
 
-        //$date1 = $db->query("SELECT date_of_income FROM incomes WHERE id='15'");
-        //$date = $date1->fetchColumn();
-        //$date2 = '2022-11-31';
-
         // ładowanie kategorii przychodu użytkownika:
         $getIncomeCategoryName=$db->query("SELECT category_name 
         FROM incomes_category_assigned_to_users 
@@ -29,8 +25,8 @@
          WHERE user_id='$userId'");
 
          //całkowita suma przychodu:
-         $totalIncomeSum=$db->query("SELECT SUM(amount) FROM incomes WHERE user_id='$userId' AND date_of_income BETWEEN $date1 AND $date2");
-         $total = $totalIncomeSum->fetchColumn();
+         //$totalIncomeSum=$db->query("SELECT SUM(amount) FROM incomes WHERE user_id='$userId' AND date_of_income BETWEEN $date1 AND $date2");
+         //$total = $totalIncomeSum->fetchColumn();
     }
 ?>
 

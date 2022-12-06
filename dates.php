@@ -11,30 +11,40 @@
 
         $userId = $_SESSION['userId'];
 
+        
+        
+
         if(isset($_POST['dates']) && ($_POST['dates'] == '1')) {
 
-            $date1 = date('Y-m-01');
+            $day = date('t');
 
-            $d = date('t');
-            $date2 = date('Y-m-'.$d);
+            $_SESSION['date1'] = date('Y-m-01');
+            $_SESSION['date2'] = date('Y-m-'.$day);
 
-            $_SESSION['balanceTitle'] = 'bieżący miesiąc';
-
-            echo $date1." ".$date2;
+            $_SESSION['balanceTitle'] = 'bieżący miesiąc';  
 
             header('Location: balance.php');
             exit();
 
         } else if(isset($_POST['dates']) && ($_POST['dates'] == '2')) {
             
-            $date1 = 'popredni miesiąc';
-            echo $date1;
+            $day = date('t', mktime(0,0,0, date('m')-1, 1, date('Y')));
+            $month = date('m')-1;
+
+            $_SESSION['date1'] = date('Y-'.$month.'-01');
+            $_SESSION['date2'] = date('Y-'.$month.'-'.$day);
+
+            $_SESSION['balanceTitle'] = 'poprzedni miesiąc';  
+            
+            header('Location: balance.php');
             exit();
 
         } else if(isset($_POST['dates']) && ($_POST['dates'] == '3')) {
             
             $date1 = 'bieżący rok';
             echo $date1;
+
+            echo $_SESSION['date1']." ".$_SESSION['date2'];
             exit();
 
         } else if(isset($_POST['dates']) && ($_POST['dates'] == '4')) {
@@ -46,7 +56,6 @@
         } else {
             $_SESSION['message'] = 'Zaznacz zakres dat!';
         }
-
 
     }
 ?>
