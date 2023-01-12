@@ -14,19 +14,29 @@
         $date1 = $_SESSION['date1'];
         $date2 = $_SESSION['date2'];
 
-        // ładowanie kategorii przychodu użytkownika:
-        $getIncomeCategoryName=$db->query("SELECT category_name 
+        // ładowanie nazw oraz ID kategorii przychodów użytkownika:
+        $getIncomesCategory=$db->query("SELECT *
         FROM incomes_category_assigned_to_users 
         WHERE user_id='$userId'");
         
-         // ładowanie kategorii wydatku użytkownika:
-         $getExpenseCategoryName=$db->query("SELECT category_name 
-         FROM expenses_category_assigned_to_users 
-         WHERE user_id='$userId'");
+        // ładowanie nazw oraz ID kategorii wydatków użytkownika:
+        $getExpensesCategory=$db->query("SELECT * 
+        FROM expenses_category_assigned_to_users 
+        WHERE user_id='$userId' ");
 
-         //całkowita suma przychodu:
-         $totalIncomeSum=$db->query("SELECT SUM(amount) FROM incomes WHERE user_id='$userId' AND date_of_income BETWEEN $date1 AND $date2");
-         $total = $totalIncomeSum->fetchColumn();
+        //całkowita suma przychodów:
+        $totalIncomesSum=$db->query("SELECT SUM(amount) FROM incomes WHERE user_id='$userId' AND date_of_income BETWEEN '$date1' AND '$date2'");
+        $totalIncomes = $totalIncomesSum->fetchColumn();
+
+        //całkowita suma wydatków:
+        $totalExpensesSum=$db->query("SELECT SUM(amount) FROM expenses WHERE user_id='$userId' AND date_of_expense BETWEEN '$date1' AND '$date2'");
+        $totalExpenses = $totalExpensesSum->fetchColumn();
+
+        //bilns całkowity:
+        $totalBalance = $totalIncomes - $totalExpenses;
+
+        $colors = array();
+        $parts = array();
     }
 ?>
 
@@ -67,115 +77,233 @@
         <!-- Balance -->
         <section class="balance">
             <div class="container">
-                <h1 id="balanceHeader" class="text-center add-header">Twój bilans w bieżacym miesiącu:</h1>
+                <h1 id="balanceHeader" class="text-center add-header"><?php echo $_SESSION['balanceTitle'] ?></h1>
                 <div class="row">
                     <div class="col-lg-6 px-3 px-md-5">
-                        <h2 class="text-uppercase balance-subheader">Przychody:</h2>
-                        <div class="box balance-box" style="background-color: #99DDCC;">
-                            <div class="accordion" id="accordionBalance01">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="heading01">
-                                        <?php
-                                            while ($name = $getIncomeCategoryName ->fetch())
+                        <h2 class="text-uppercase text-center balance-subheader">Wydatki</h2>
+                        <div class="box balance-box" style="background-color: #4FC6A8;">
+                            <div class="accordion" id="accordionExpenseBalance">
+                                <div class="accordion" id="accordionExpenseBalance1">
+                                    <div class="accordion-item">
+                                            <?php
+                                                $number = 1;
+                                                while ($category = $getExpensesCategory ->fetch())
+                                                {
+                                                    $expenseCategoryId = $category['id'];
+
+                                                    //ładownie wydatków użytkownika w kategorii:
+                                                    $userExpensesCategory=$db->query("SELECT * FROM expenses 
+                                                    WHERE expense_category_assigned_to_user_id='$expenseCategoryId' 
+                                                    AND date_of_expense BETWEEN '$date1' AND '$date2'");
+
+                                                    // suma wydatków w kategorii:
+                                                    $totalCategoryExpenses = $db->query("SELECT SUM(amount) FROM expenses 
+                                                    WHERE expense_category_assigned_to_user_id='$expenseCategoryId' 
+                                                    AND date_of_expense BETWEEN '$date1' AND '$date2'");
+                                                    $totalSumCategoryExpenses = $totalCategoryExpenses->fetchColumn();
+
+                                                    if($totalSumCategoryExpenses > 0) {
+                                                        echo '
+                                                        <div class="accordion-item">
+                                                            <h2 class="accordion-header" id="heading'.$number.'">
+                                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                                                data-bs-target="#collapse'.$number.'" aria-expanded="true" aria-controls="collapse'.$number.'">
+                                                                    <span class="">'.$category['category_name'].'</span>
+                                                                </button>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapse'.$number.'" class="accordion-collapse collapse" aria-labelledby="heading'.$number.'" 
+                                                        data-bs-parent="#accordionBalance'.$number.'">
+                                                            <div class="accordion-body">
+                                                                <table>';  
+
+                                                                    while ($userExpense = $userExpensesCategory->fetch())
+                                                                    {
+                                                                        echo '<tr><td class="accordion__bold-text">'.$userExpense['expense_comment'].'</td>';
+                                                                        echo '<td>'.$userExpense['date_of_expense'].'</td>';
+                                                                        echo '<td>'.$userExpense['amount'].'</td></tr>'; 
+                                                                    }
+                                                                    
+                                                                    echo '
+                                                                        <tr>
+                                                                            <td colspan="2" class="accordion__bold-text">Suma:</td> <td class="accordion__sum">
+                                                                                <span>'.$totalSumCategoryExpenses.'</span> zł
+                                                                            </td>
+                                                                        </tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>';
+                                                    }
+
+                                                    $number++;
+                                                }
+                                            ?>
+                                    </div>  
+                                </div>
+                            </div>
+                            <div class="d-flex mt-4 mb-3">
+                                <h3 class="text-uppercase balance-box__item-subheader">Całkowita suma wydatków:</h3>
+                                <div class="box balance-box__sum">
+                                    <?php
+                                        echo '<span id="allExpensesSum">'.$totalExpenses.' zł</span>';
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="piechart mt-5">
+                                <h2 class="balance-subheader">Wykres Twoich wydatków:</h2> 
+                                <div class="text-center piechart__key mb-5">
+                                    <?php
+  
+                                        $getExpensesCategory=$db->query("SELECT * 
+                                        FROM expenses_category_assigned_to_users 
+                                        WHERE user_id='$userId' ");
+                                        
+                                        $n=0;
+                                        $i=0;
+
+                                        while($category = $getExpensesCategory ->fetch())
+                                        {
+                                            $expenseCategoryId = $category['id'];
+                                                                                        
+                                            $totalCategoryExpenses = $db->query("SELECT SUM(amount) FROM expenses 
+                                            WHERE expense_category_assigned_to_user_id='$expenseCategoryId' 
+                                            AND date_of_expense BETWEEN '$date1' AND '$date2'");
+                                            $totalSumCategoryExpenses = $totalCategoryExpenses->fetchColumn();
+
+                                            $backgroundColor = dechex(rand(0x000000,0xFFFFCD));
+                                            
+
+                                            if($totalSumCategoryExpenses > 0)
                                             {
                                                 echo '
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse01" aria-expanded="true" aria-controls="collapse01">
-                                                    <span class="">'.$name['category_name'].'</span>
-                                                    </button>';
+                                                <div class="d-flex mb-1">
+                                                    <div class="small-square" style="background-color: #'.$backgroundColor.';"></div>
+                                                    <span>'.$category['category_name'].'</span>
+                                                </div>';
+                                                $i++;
+                                                $colors[$i] = $backgroundColor;
+                                                $parts[$i] = ($totalSumCategoryExpenses / $totalExpenses)*360;
+                                                $n++;
+                                                $_SESSION['number'] = $n;
+                                            } 
+                                        }   
+                                    ?>
+                                    <style>
+                                    .piechart__item {
+                                        background-image: conic-gradient(
+                                            <?php
+                                                $sum = 0;
+                                                for($i=1; $i <= $_SESSION['number']; $i++) {
+                                                    
+                                                    
+                                                    if($i == 1) {
+                                                        echo '#'.$colors[1].' '.$parts[1].'deg, ';
+                                                    } else if($i == $_SESSION['number']) {
+                                                        echo '#'.$colors[$i].' '.$sum.'deg';
+                                                    } else {
+                                                        echo '#'.$colors[$i].' '.$sum.'deg '.$parts[$i]+$sum.'deg, ';
+                                                    }
+
+                                                    $sum = $sum + $parts[$i];
+                                                }
+                                            ?>);
+                                    }
+                                </style>
+                                <div class="piechart__item mx-auto"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6 px-3 px-md-5">
+                    <h2 class="text-uppercase text-center balance-subheader">Przychody</h2>
+                        <div class="box balance-box" style="background-color: #99DDCC;">
+                            <div class="accordion" id="accordionIncomeBalance01">
+                                <div class="accordion-item">
+                                        <?php
+                                            $number = 1;
+                                            while ($category = $getIncomesCategory ->fetch())
+                                            {
+                                                $incomeCategoryId = $category['id'];
+
+                                                //ładownie przychodów użytkownika w kategorii:
+                                                $userIncomesCategory=$db->query("SELECT * FROM incomes 
+                                                WHERE income_category_assigned_to_user_id='$incomeCategoryId' 
+                                                AND date_of_income BETWEEN '$date1' AND '$date2'");
+
+                                                // suma przychodów w kategorii:
+                                                $totalCategoryIncomes = $db->query("SELECT SUM(amount) FROM incomes WHERE income_category_assigned_to_user_id='$incomeCategoryId' 
+                                                AND date_of_income BETWEEN '$date1' AND '$date2'");
+                                                $totalSumCategoryIncomes = $totalCategoryIncomes->fetchColumn();
+
+                                                if($totalSumCategoryIncomes > 0) {
+                                                    echo '
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header" id="heading0'.$number.'">
+                                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse0'.$number.'" aria-expanded="true" aria-controls="collapse0'.$number.'">
+                                                                <span class="">'.$category['category_name'].'</span>
+                                                            </button>
+                                                        </h2>
+                                                    </div>
+                                                    <div id="collapse0'.$number.'" class="accordion-collapse collapse" aria-labelledby="heading0'.$number.'" data-bs-parent="#accordionBalance0'.$number.'">
+                                                        <div class="accordion-body text-center">
+                                                            <table>
+                                                                ';                                                  
+
+                                                                    while ($userIncome = $userIncomesCategory->fetch())
+                                                                    {
+                                                                        echo '<tr><td class="accordion__bold-text">'.$userIncome['income_comment'].'</td>';
+                                                                        echo '<td>'.$userIncome['date_of_income'].'</td>';
+                                                                        echo '<td>'.$userIncome['amount'].'</td></tr>'; 
+                                                                    }
+                                                                    
+                                                                    echo '
+                                                                        <tr>
+                                                                            <td colspan="2" class="accordion__bold-text">Suma:</td> <td class="accordion__sum">
+                                                                                 <span id="incomes1Sum">'.$totalSumCategoryIncomes.'</span> zł
+                                                                            </td>
+                                                                        </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>';
+                                                }
+
+                                                $number++;
                                             }
                                         ?>
-                                    </h2>
-                                    <!-- <div id="collapse01" class="accordion-collapse collapse" aria-labelledby="heading01" data-bs-parent="#accordionBalance1">
-                                        <div class="accordion-body">
-                                                <table>
-                                                    <tr>
-                                                        <td class="accordion__bold-text">Wypłata</td> <td>2022-01-10</td> <td id="income11">4500</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="accordion__bold-text">Premia</td> <td>2022-01-10</td> <td id="income12">500</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="2" class="accordion__bold-text">Suma:</td> <td class="accordion__sum"><span id="incomes1Sum">5000</span> zł</td>
-                                                    </tr>
-                                                </table>
-                                         </div>
-                                    </div> -->
-                                </div>
+                                </div>  
                             </div>
                             <div class="d-flex mt-4">
                                 <h3 class="text-uppercase balance-box__item-subheader">Całkowita suma przychodów:</h3>
                                 <div class="box balance-box__sum">
                                     <?php
-                                        echo '<span id="allIncomesSum" class="">'.$total.' zł</span>';
+                                        echo '<span id="allIncomesSum">'.$totalIncomes.' zł</span>';
                                     ?>
                                 </div>
                             </div>
                         </div>
-                        <h2 class="text-uppercase balance-subheader">Wydatki:</h2>
-                        <div class="box balance-box" style="background-color: #4FC6A8;">
-                            <div class="accordion" id="accordionBalance">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="heading1">
-                                    <?php
-                                            while ($name = $getExpenseCategoryName ->fetch())
-                                            {
-                                                echo '
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse01" aria-expanded="true" aria-controls="collapse01">
-                                                    <span class="">'.$name['category_name'].'</span>
-                                                    </button>';
-                                            }
-                                        ?>
-                                    </h2>
-                                <!-- <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordionBalance">
-                                        <div class="accordion-body">
-                                            <table>
-                                                <tr>
-                                                    <td class="accordion__bold-text">Wypłata</td> <td>2022-01-10</td> <td>4500.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="accordion__bold-text">Premia</td> <td>2022-01-10</td> <td>500.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2" class="accordion__bold-text">Suma:</td> <td style="font-weight: 700; font-size: 16px;">5000.00 zł</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div> -->
-                                </div>
-                            </div>
-                            <div class="d-flex mt-4">
-                                <h3 class="text-uppercase balance-box__item-subheader">Całkowita suma wydatków:</h3>
-                                <div class="box balance-box__sum">
-                                    8500<span> zł</span>
-                                </div>
-                            </div>
+
+                        <div class="text-center">
+                            <img class="img-fluid" src="img/ECONOMY_ANALYSIS.png" alt="budżet domowy" />
                         </div>
-                    </div>
-                    <div class="col-lg-6 px-3 px-md-5">
-                        <img class="img-fluid" src="img/ECONOMY_ANALYSIS.png" alt="budżet domowy" />
+
                         <div class="box balance-box mt-5" style="background-color: #EAEAEB;">
                             <h3 class="balance-subheader pb-2">Twój całkowity bilans wynosi:</h3>
-                            <div class="box balance-box__sum mb-2" style="font-size: 24px;"><span id="balanceSum" type="number">15000</span> zł</div>
-                            <h4 id="balanceSumStatement" class="text-center mt-4"></h4>
-                        </div>
-                        <div class="piechart">
-                            <h2 class="text-uppercase balance-subheader">Wykres Twoich wydatków:</h2>
-                            <div class="piechart__item mx-auto"></div>
-                            <div class="text-center piechart__key mb-5">
-                                <div class="d-flex mb-1">
-                                    <div class="small-square" style="background-color: #99DDCC;"></div>
-                                    <span>Jedzenie</span>
-                                </div>
-                                <div class="d-flex mb-1">
-                                    <div class="small-square" style="background-color: #CA2ACD;"></div>
-                                    <span>Transport</span>
-                                </div>
-                                <div class="d-flex mb-1">
-                                    <div class="small-square" style="background-color: #000D6B;"></div>
-                                    <span>Rachunki</span>
-                                </div>
+                            <div class="box balance-box__sum mb-2" style="font-size: 24px;">
+                                <?php 
+                                    echo '<span id="balanceSum" type="number" step="0.01">'.$totalBalance.' zł</span>';
+                                ?>
                             </div>
+                            <h4 class="text-center mt-4">
+                                <?php 
+                                    if( $totalBalance < 0) echo 'Uważaj! Wpadasz w długi!';
+                                    else echo 'Gratulacje! Świetnie zarządzasz finansami!';
+                                ?>
+                            </h4>
                         </div>
+
+                        
+
                     </div>
                 </div>
             </div>
