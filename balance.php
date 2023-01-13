@@ -170,7 +170,10 @@
                                             AND date_of_expense BETWEEN '$date1' AND '$date2'");
                                             $totalSumCategoryExpenses = $totalCategoryExpenses->fetchColumn();
 
-                                            $backgroundColor = dechex(rand(0x000000,0xFFFFCD));
+                                            // losowy kolor:
+                                            
+                                            $color = dechex(rand(0x000000,0xFFFFCD));
+                                            $backgroundColor = str_pad($color, 6, '0', STR_PAD_LEFT);
                                             
 
                                             if($totalSumCategoryExpenses > 0)

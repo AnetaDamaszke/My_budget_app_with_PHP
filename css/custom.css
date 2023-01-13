@@ -518,10 +518,6 @@ input:checked ~ .checkmark {
     width: 400px;
     height: 400px;
     border-radius: 50%;
-    background-image: conic-gradient(
-        #CA2ACD 70deg, 
-        #000D6B 0 235deg, 
-        #99DDCC 0);
 }
 
 @media only screen and (max-width: 576px) {

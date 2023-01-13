@@ -31,7 +31,7 @@
             $comment = $_POST['comment'];
 
             // pobierania ID kategorii przychodu:
-            $getExpenseId=$db->query("SELECT id FROM expenses_category_assigned_to_users WHERE category_name='$category'");
+            $getExpenseId=$db->query("SELECT id FROM expenses_category_assigned_to_users WHERE category_name='$category' AND user_id='$userId'");
             $categoryId = $getExpenseId->fetchColumn();
 
             // pobierania ID metody płatności:
@@ -104,7 +104,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group w-100">
                                             <label for="expenseValue" class="form-control-label mb-2">Kwota w PLN</label>
-                                            <input name="expenseValue" placeholder="np. 500.00" class="form-control"/>
+                                            <input name="expenseValue" type="number" step="0.01" min="0.01" placeholder="np. 500" class="form-control"/>
                                         </div>
                                     </div> 
                                     <div class="col-md-6">
