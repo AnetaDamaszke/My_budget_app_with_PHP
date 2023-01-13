@@ -21,7 +21,7 @@
             $_SESSION['date1'] = date('Y-m-01');
             $_SESSION['date2'] = date('Y-m-'.$day);
 
-            $_SESSION['balanceTitle'] = 'bieżący miesiąc';  
+            $_SESSION['balanceTitle'] = 'Twój bilans w bieżącym miesiącu:';  
 
             header('Location: balance.php');
             exit();
@@ -34,7 +34,7 @@
             $_SESSION['date1'] = date('Y-'.$month.'-01');
             $_SESSION['date2'] = date('Y-'.$month.'-'.$day);
 
-            $_SESSION['balanceTitle'] = 'poprzedni miesiąc';  
+            $_SESSION['balanceTitle'] = 'Twój bilans w poprzednim miesiącu:';  
             
             header('Location: balance.php');
             exit();
@@ -44,7 +44,7 @@
             $_SESSION['date1'] = date('Y-01-01');
             $_SESSION['date2'] = date('Y-m-d');
 
-            $_SESSION['balanceTitle'] = 'bieżący rok';
+            $_SESSION['balanceTitle'] = 'Twój bilans w bieżącym roku';
 
             header('Location: balance.php');
             exit();
@@ -54,7 +54,7 @@
             $_SESSION['date1'] = $_POST['date1'];
             $_SESSION['date2'] = $_POST['date2'];
 
-            $_SESSION['balanceTitle'] = 'niestandardowe';
+            $_SESSION['balanceTitle'] = 'Twój bilans w okresie od '.$date1.' do '.$date2.':';
             
             header('Location: balance.php');
             exit();
